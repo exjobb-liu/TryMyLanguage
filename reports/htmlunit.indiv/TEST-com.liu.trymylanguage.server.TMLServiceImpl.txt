@@ -1,0 +1,9 @@
+Testsuite: com.liu.trymylanguage.server.TMLServiceImpl
+Tests run: 1, Failures: 0, Errors: 1, Time elapsed: 0.059 sec
+
+Testcase: initializationError took 0.008 sec
+	Caused an ERROR
+No runnable methods
+java.lang.Exception: No runnable methods
+	at java.lang.reflect.Constructor.newInstance(Unknown Source)
+

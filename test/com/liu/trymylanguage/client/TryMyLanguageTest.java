@@ -21,7 +21,7 @@ public class TryMyLanguageTest extends GWTTestCase {
   /**
    * Tests the FieldVerifier.
    */
-  public void testFieldVerifier() {
+ /* public void testFieldVerifier() {
     assertFalse(FieldVerifier.isValidName(null));
     assertFalse(FieldVerifier.isValidName(""));
     assertFalse(FieldVerifier.isValidName("a"));
@@ -34,7 +34,7 @@ public class TryMyLanguageTest extends GWTTestCase {
    * This test will send a request to the server using the greetServer method in
    * GreetingService and verify the response.
    */
-  public void testGreetingService() {
+ /* public void testGreetingService() {
     // Create the service that we will test.
     GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
     ServiceDefTarget target = (ServiceDefTarget) greetingService;
@@ -63,6 +63,6 @@ public class TryMyLanguageTest extends GWTTestCase {
       }
     });
   }
-
+*/
 
 }

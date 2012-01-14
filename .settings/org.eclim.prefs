@@ -1,0 +1,5 @@
+#Fri Dec 09 17:53:42 CET 2011
+eclipse.preferences.version=1
+org.eclim.java.junit.command=Ant -Djunit.include\=<testcase_class> test.indiv
+org.eclim.java.junit.output_dir=<project>/reports/htmlunit.indiv
+org.eclim.java.junit.src_dir=<project>/test

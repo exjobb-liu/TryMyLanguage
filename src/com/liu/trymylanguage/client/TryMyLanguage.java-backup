@@ -1,0 +1,109 @@
+  /**
+   * The message displayed to the user when the server cannot be reached or
+   * returns an error.
+   */
+  private static final String SERVER_ERROR = "An error occurred while "
+      + "attempting to contact the server. Please check your network "
+      + "connection and try again.";
+  
+  /**
+   * Create a remote service proxy to talk to the server-side Greeting service.
+   */
+    /**
+     *Define UI widgets
+     */
+    private SplitLayoutPanel mainPanel = new SplitLayoutPanel();
+
+    private VerticalPanel editorPanel = new VerticalPanel();
+    private Button runButton = new Button(" Run ");
+    private Button upButton = new Button();
+    private Button nextButton = new Button();
+    private Button previousButton = new Button();
+    private ListBox chooseLanguageBox = new ListBox();
+    private TextArea tutorialArea = new TextArea();
+    private TextArea consoleArea = new TextArea();
+    private FlowPanel toolbarPanel = new FlowPanel();
+    
+
+
+	toolbarPanel.add(runButton);
+      toolbarPanel.add(chooseLanguageBox);
+
+      //Attach widgets to editorPanel
+      editorPanel.add(toolbarPanel);
+      editorPanel.add(new HTML("<div id=\"codemirror\"></div>"));
+      
+      
+
+
+      //Adding widgets to panel areas
+      mainPanel.addWest(tutorialArea,150);
+      mainPanel.addNorth(editorPanel,384);
+      mainPanel.add(consoleArea);
+     
+      // Attach 3 widgets to a DockLayoutPanel
+      // Lay them out in 'em' units.
+      DockLayoutPanel lp = new DockLayoutPanel(Unit.EM);
+      lp.addNorth(new HTML("Try My Language"),2);
+      lp.addSouth(new HTML("Footer"),2);
+      lp.add(mainPanel);
+
+      //Add mainPanel to the HTML element with mainPanel as id
+      RootLayoutPanel.get().add(lp);
+
+    
+      // Set the cursor focus on code editor
+      // consoleArea.setFocus(true);
+      final JavaScriptObject editor = this.loadCodeMirror();
+
+      /*final AsyncCallback<Process> callback = new AsyncCallback<Process>() {
+	  public void onFailure(Throwable caught) {
+	      // TODO: Do something with errors.
+	  }
+	  
+	  public void onSuccess(Process p) {
+	      bindConsole(p);
+	  }
+	  };*/
+      
+      
+      runButton.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event){
+		  // compileService.compile(getCodeMirrorContent(editor),callback);
+	      }
+	      
+	      
+	      
+	  });
+      
+  }
+    private static native JavaScriptObject loadCodeMirror() /*-{
+	  
+	  
+	   codemirror =  new $wnd.CodeMirror($doc.getElementById("codemirror"), {
+	   value: "class Test{}\n",
+	   mode:  "text/x-java",
+	   lineNumbers: "true"
+	   });
+	   return codemirror;
+	   }-*/;
+
+    private static native String getCodeMirrorContent(JavaScriptObject editor) /*-{
+	  
+	  
+	   
+	   return editor.getValue();
+	   }-*/;
+
+   /* private void bindConsole(Process p){
+	
+	    try {
+		BufferedReader bf  = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String s  = bf.readLine();
+		consoleArea.setText(s);
+		
+	    } catch (IOException ex) {
+		ex.printStackTrace();
+	    }
+
+	    }*/

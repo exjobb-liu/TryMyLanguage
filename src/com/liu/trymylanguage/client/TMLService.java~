@@ -1,0 +1,14 @@
+package com.liu.trymylanguage.client;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.liu.trymylanguage.shared.ConsoleDTO;
+import java.io.IOException;
+
+@RemoteServiceRelativePath("compile")
+public interface TMLService extends RemoteService {
+
+    ConsoleDTO compile(String source);
+    ConsoleDTO run(String source);
+ 
+}

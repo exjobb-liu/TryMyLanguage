@@ -6,7 +6,7 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
-  <servlet>
+  <!--servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.liu.trymylanguage.server.GreetingServiceImpl</servlet-class>
   </servlet>
@@ -14,8 +14,16 @@
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/trymylanguage/greet</url-pattern>
+    </servlet-mapping-->
+  <servlet>
+    <servlet-name>TMLServiceImpl</servlet-name>
+    <servlet-class>com.liu.trymylanguage.server.TMLServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>TMLServiceImpl</servlet-name>
+    <url-pattern>/trymylanguage/tmlservice</url-pattern>
   </servlet-mapping>
-  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>TryMyLanguage.html</welcome-file>

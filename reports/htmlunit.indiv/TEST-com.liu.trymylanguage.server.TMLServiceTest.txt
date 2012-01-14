@@ -1,0 +1,12 @@
+Testsuite: com.liu.trymylanguage.server.TMLServiceTest
+Tests run: 1, Failures: 1, Errors: 0, Time elapsed: 0.325 sec
+------------- Standard Output ---------------
+null
+------------- ---------------- ---------------
+
+Testcase: test_compileHello took 0.247 sec
+	FAILED
+null
+junit.framework.AssertionFailedError
+	at com.liu.trymylanguage.server.TMLServiceTest.test_compileHello(TMLServiceTest.java:49)
+

@@ -1,0 +1,9 @@
+Testsuite: com.liu.trymylanguage.server.CompileServiceTest
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.736 sec
+------------- Standard Output ---------------
+Test
+Hello
+------------- ---------------- ---------------
+
+Testcase: test_returnFilename took 0.144 sec
+Testcase: test_compileHello took 0.358 sec
