@@ -2,6 +2,9 @@ package com.liu.trymylanguage.client.presenter;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,9 +25,14 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 	
 	}
 	private final Display display;
+	private final EventBus eventBus;
+	//private final TMLServiceAsync rpcService;
+	
+	
 	private LangParamDTO langDTO = new LangParamDTO();
 
-	public NewLangPresenter(Display view){
+	public NewLangPresenter(EventBus eventBus, Display view){
+		this.eventBus = eventBus;
 		display = view;
 	
 	}

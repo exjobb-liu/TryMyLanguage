@@ -50,6 +50,7 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 	private LayoutPanel editorPanel = new LayoutPanel();
 	private Button runButton = new Button(" Run ");
+	private Button addLangButton = new Button("+");
 	private Button upButton = new Button();
 	private Button nextButton = new Button();
 	private Button previousButton = new Button();
@@ -95,6 +96,7 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 		toolbarPanel.add(runButton);
 		toolbarPanel.add(chooseLanguageBox);
+		toolbarPanel.add(addLangButton);
 		runButton.addAttachHandler(new Handler(){
 			public void onAttachOrDetach(AttachEvent event){
 				editorPanel.setWidgetTopHeight(toolbarPanel,0,Unit.PX,runButton.getOffsetHeight(),Unit.PX);
@@ -155,6 +157,10 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	} 
 	public Widget asWidget(){
 		return this;
+	}
+	@Override
+	public HasClickHandlers getAddLangButton() {
+		return addLangButton;
 	}
 
 }

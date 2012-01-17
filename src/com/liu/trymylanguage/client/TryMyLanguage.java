@@ -1,5 +1,7 @@
 package com.liu.trymylanguage.client;
 
+import com.google.gwt.event.shared.EventBus;
+
 import com.liu.trymylanguage.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -49,7 +51,7 @@ public class TryMyLanguage implements EntryPoint {
    */
     public void onModuleLoad() {
 	
-	HasHandlers eventBus= new SimpleEventBus();
+	EventBus eventBus= new SimpleEventBus();
 	final TMLServiceAsync tmlService = GWT.create(TMLService.class);
 	Presenter appViewer = new AppController(eventBus,tmlService);
 	appViewer.go(RootLayoutPanel.get());

@@ -6,6 +6,8 @@ import java.util.Collection;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.event.shared.HasHandlers;
 import com.liu.trymylanguage.client.TMLServiceAsync;
+
+import com.liu.trymylanguage.client.event.AddLangEvent;
 import com.liu.trymylanguage.shared.ConsoleDTO;
 import com.liu.trymylanguage.shared.CodeDTO;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -43,6 +45,7 @@ public class IDEPresenter implements  Presenter {
    
     public interface Display{
 	HasClickHandlers getRunButton();
+	HasClickHandlers getAddLangButton();
 	void setConsoleData(String data);
 	HasKeyPressHandlers getConsole();
 	String getSelectedTabValue();
@@ -72,6 +75,12 @@ public class IDEPresenter implements  Presenter {
 		    
 		}
 	    });
+	display.getAddLangButton().addClickHandler(new ClickHandler(){
+	
+		public void onClick(ClickEvent event){
+			eventBus.fireEvent(new AddLangEvent());
+		}
+	});
 	tmlService.getSupportedTypes(new AsyncCallback<ArrayList<FileTypeDTO>>(){
 	        // Implementation of com.google.gwt.user.client.rpc.AsyncCallback
 		public final void onFailure(final Throwable throwable) {
