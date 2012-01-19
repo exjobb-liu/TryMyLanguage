@@ -67,28 +67,13 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 		conf= new CodeMirrorConf();
 
-		JSONObject mode = new JSONObject();
-		JSONArray keywords = new JSONArray();
-		JSONArray stringCh = new JSONArray();
-		keywords.set(0,new JSONString("class"));
-		keywords.set(1,new JSONString("System"));
-		stringCh.set(0,new JSONString("\'"));
-		stringCh.set(1,new JSONString("\""));
-		mode.put("name",new JSONString("basemode"));
-		mode.put("keywords",keywords);
-		mode.put("stringCh",stringCh);
-		mode.put("commentSingle",new JSONString("//"));
-		mode.put("commentMStart",new JSONString("/*"));
-		mode.put("commentMEnd",new JSONString("*/"));
-		mode.put("escapeCh",new JSONString("\\"));
-		mode.put("isOperatorChar",new JSONString("\\+-"));
-
+		
 		conf.setValue("public class Test{\n"+
 				"	public static void main(String[] argsv){\n"+
 				"		System.out.println(\"test\");\n"+
 				"	}\n"+
 				"}");
-		conf.setMode(mode);
+		conf.setMode(new JSONObject());
 		conf.setLineNumbers(true);
 		editor = new CodeMirror2(conf);
 
@@ -161,6 +146,14 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	@Override
 	public HasClickHandlers getAddLangButton() {
 		return addLangButton;
+	}
+	@Override
+	public ListBox getLangBox() {
+		return chooseLanguageBox;
+	}
+	@Override
+	public CodeMirror2 getEditor() {
+		return editor;
 	}
 
 }

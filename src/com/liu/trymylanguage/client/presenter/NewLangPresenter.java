@@ -4,15 +4,20 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.HandlerManager;
+
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+
+import com.liu.trymylanguage.client.event.SaveLangEvent;
 
 import com.liu.trymylanguage.shared.LangParamDTO;
 
  public class NewLangPresenter implements Presenter {
 	public interface Display {
+		String getName();
 		String getKeywords();
 		String getOperators();
 		String getCommentSingle();
@@ -29,7 +34,6 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 	//private final TMLServiceAsync rpcService;
 	
 	
-	private LangParamDTO langDTO = new LangParamDTO();
 
 	public NewLangPresenter(EventBus eventBus, Display view){
 		this.eventBus = eventBus;
@@ -38,6 +42,7 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 	}
 	@Override
 	public void go(HasWidgets container) {
+		bind();
 		
 		container.clear();
 		container.add(display.asWidget());
@@ -47,19 +52,18 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
-				
+				run();
 			}
 			
 		});
 	
 	}
 	private void run(){
-		langDTO.setKeywords(display.getKeywords()
+/*		langDTO.setKeywords(display.getKeywords()
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
 		langDTO.setOperators(display.getOperators()
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
-		langDTO.setCommentSingle(display.getCommentSingle()
+langDTO.setCommentSingle(display.getCommentSingle()
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
 		langDTO.setCommentMStart(display.getCommentMStart()
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
@@ -69,7 +73,33 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
 		langDTO.setStringChar(display.getStringChar()
 				.replace("\\","\\\\").replace("\"","\\\"").replace("\'","\\\'"));
-	
+*/	
+		LangParamDTO dto = new LangParamDTO();
+		String[] keywords = display.getKeywords().trim().split("\\s");
+		JSONArray array = new JSONArray();
+		for (int i=0;i<keywords.length ;i++ ){
+			array.set(i,new JSONString(keywords[i]));
+
+		} 
+		String[] stringChar = display.getStringChar().trim().split("\\s");
+		JSONArray sarray = new JSONArray();
+		for (int i=0;i<stringChar.length ;i++ ){
+			sarray.set(i,new JSONString(stringChar[i]));
+
+		} 
+		dto.setStringChar(sarray);
+		dto.setKeywords(array);
+		dto.setName(new JSONString(display.getName()));
+		dto.setCommentMEnd(new JSONString(display.getCommentMEnd()));
+		dto.setCommentMStart(new JSONString(display.getCommentMStart()));
+		dto.setCommentSingle(new JSONString(display.getCommentSingle()));
+		dto.setEscapeChar(new JSONString(display.getEscapeChar()));
+		dto.setOperators(new JSONString(display.getOperators()));
+
+		eventBus.fireEvent(new SaveLangEvent(dto));
+
+
+
 	}
- 	
+
  }

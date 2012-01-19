@@ -1,19 +1,41 @@
 package com.liu.trymylanguage.shared;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
+
 public class LangParamDTO {
-	private String keywords;
-	private String operators;
-	private String commentSingle;
-	private String commentMStart;
-	private String commentMEnd;
-	private String escapeChar;
-	private String stringChar;
+	private JSONString name;
+	private JSONArray keywords;
+	private JSONString operators;
+	private JSONString commentSingle;
+	private JSONString commentMStart;
+	private JSONString commentMEnd;
+	private JSONString escapeChar;
+	private JSONArray stringChar;
+	/**
+	 * Gets the name for this instance.
+	 *
+	 * @return The name.
+	 */
+	public JSONString getName()
+	{
+		return this.name;
+	}
+	/**
+	 * Sets the name for this instance.
+	 *
+	 * @param name The name.
+	 */
+	public void setName(JSONString name)
+	{
+		this.name = name;
+	}
 	/**
 	 * Gets the keywords for this instance.
 	 *
 	 * @return The keywords.
 	 */
-	public String getKeywords()
+	public JSONArray getKeywords()
 	{
 		return this.keywords;
 	}
@@ -22,7 +44,7 @@ public class LangParamDTO {
 	 *
 	 * @param keywords The keywords.
 	 */
-	public void setKeywords(String keywords)
+	public void setKeywords(JSONArray keywords)
 	{
 		this.keywords = keywords;
 	}
@@ -31,7 +53,7 @@ public class LangParamDTO {
 	 *
 	 * @return The operators.
 	 */
-	public String getOperators()
+	public JSONString getOperators()
 	{
 		return this.operators;
 	}
@@ -40,7 +62,7 @@ public class LangParamDTO {
 	 *
 	 * @param operators The operators.
 	 */
-	public void setOperators(String operators)
+	public void setOperators(JSONString operators)
 	{
 		this.operators = operators;
 	}
@@ -49,7 +71,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentSingle.
 	 */
-	public String getCommentSingle()
+	public JSONString getCommentSingle()
 	{
 		return this.commentSingle;
 	}
@@ -58,7 +80,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentSingle The commentSingle.
 	 */
-	public void setCommentSingle(String commentSingle)
+	public void setCommentSingle(JSONString commentSingle)
 	{
 		this.commentSingle = commentSingle;
 	}
@@ -67,7 +89,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentMStart.
 	 */
-	public String getCommentMStart()
+	public JSONString getCommentMStart()
 	{
 		return this.commentMStart;
 	}
@@ -76,7 +98,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentMStart The commentMStart.
 	 */
-	public void setCommentMStart(String commentMStart)
+	public void setCommentMStart(JSONString commentMStart)
 	{
 		this.commentMStart = commentMStart;
 	}
@@ -85,7 +107,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentMEnd.
 	 */
-	public String getCommentMEnd()
+	public JSONString getCommentMEnd()
 	{
 		return this.commentMEnd;
 	}
@@ -94,7 +116,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentMEnd The commentMEnd.
 	 */
-	public void setCommentMEnd(String commentMEnd)
+	public void setCommentMEnd(JSONString commentMEnd)
 	{
 		this.commentMEnd = commentMEnd;
 	}
@@ -103,7 +125,7 @@ public class LangParamDTO {
 	 *
 	 * @return The escapeChar.
 	 */
-	public String getEscapeChar()
+	public JSONString getEscapeChar()
 	{
 		return this.escapeChar;
 	}
@@ -112,7 +134,7 @@ public class LangParamDTO {
 	 *
 	 * @param escapeChar The escapeChar.
 	 */
-	public void setEscapeChar(String escapeChar)
+	public void setEscapeChar(JSONString escapeChar)
 	{
 		this.escapeChar = escapeChar;
 	}
@@ -121,7 +143,7 @@ public class LangParamDTO {
 	 *
 	 * @return The stringChar.
 	 */
-	public String getStringChar()
+	public JSONArray getStringChar()
 	{
 		return this.stringChar;
 	}
@@ -130,7 +152,7 @@ public class LangParamDTO {
 	 *
 	 * @param stringChar The stringChar.
 	 */
-	public void setStringChar(String stringChar)
+	public void setStringChar(JSONArray stringChar)
 	{
 		this.stringChar = stringChar;
 	}
