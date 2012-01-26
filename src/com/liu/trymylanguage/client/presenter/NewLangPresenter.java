@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.EventBus;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,7 +48,10 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 		container.clear();
 		container.add(display.asWidget());
 	}
+	
+	
 	private void bind(){
+		
 		display.getSaveButton().addClickHandler(new ClickHandler(){
 
 			@Override

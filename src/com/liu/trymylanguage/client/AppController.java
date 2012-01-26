@@ -16,10 +16,10 @@ import com.liu.trymylanguage.client.event.SaveLangEvent;
 import com.liu.trymylanguage.client.event.SaveLangEventHandler;
 import com.liu.trymylanguage.client.presenter.NewLangPresenter;
 import com.liu.trymylanguage.client.presenter.Presenter;
-import com.google.gwt.event.shared.HasHandlers;
 import com.liu.trymylanguage.client.presenter.IDEPresenter;
 
 import com.liu.trymylanguage.client.view.IDEView;
+import com.liu.trymylanguage.client.view.NewLangUi;
 import com.liu.trymylanguage.client.view.NewLangView;
 
 import com.liu.trymylanguage.shared.LangParamDTO;
@@ -101,7 +101,7 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			if (token !=null){
 				Presenter presenter = null;
 				if (token.equals("addLang")){
-					presenter = new NewLangPresenter(eventBus, new NewLangView());
+					presenter = new NewLangPresenter(eventBus, new NewLangUi());
 
 				} 
 				if (token.equals("ide")){
