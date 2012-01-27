@@ -96,7 +96,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	    return "default";
     }
 	@Override
-	public void saveLang(LangParamDTO dto) throws FileNotFoundException{
+	public void saveLang(LangParamDTO dto) {
 		try {
 			ObjectOutput output = new ObjectOutputStream(new FileOutputStream("langparam.bin"));
 			output.writeObject(dto);
@@ -107,13 +107,14 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		
 	}
 	@Override
-	public LangParamDTO getLangParam() throws FileNotFoundException{
+	public LangParamDTO getLangParam() {
 		
 		LangParamDTO dto = null;
 		try {
 			ObjectInput obj = new ObjectInputStream(new BufferedInputStream(new FileInputStream("langparam.bin")));
 			dto = (LangParamDTO)obj.readObject();
 		} catch (IOException e) {
+			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

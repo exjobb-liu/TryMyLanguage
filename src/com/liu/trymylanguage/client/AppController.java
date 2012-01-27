@@ -65,7 +65,7 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 				new SaveLangEventHandler(){
 					public void onSaveLang(SaveLangEvent event){
 						LangParamDTO dto = event.getValue();
-						dtos.add(dto);
+						
 						History.newItem("ide");
 					}
 
@@ -100,12 +100,12 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			if (token !=null){
 				Presenter presenter = null;
 				if (token.equals("addLang")){
-					presenter = new NewLangPresenter(eventBus, new NewLangUi());
+					presenter = new NewLangPresenter(eventBus, new NewLangUi(), rpcService);
 
 				} 
 				if (token.equals("ide")){
 					
-					presenter = new IDEPresenter(rpcService,eventBus,new IDEView(),dtos);
+					presenter = new IDEPresenter(rpcService,eventBus,new IDEView());
 				
 				}
 				if (presenter !=null){

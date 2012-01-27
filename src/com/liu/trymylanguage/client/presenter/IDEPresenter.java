@@ -6,6 +6,7 @@ import java.util.Collection;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -47,59 +48,92 @@ import se.liu.gwt.widgets.client.CodeMirror2;
 
 public class IDEPresenter implements  Presenter {
 
-    /**
-     * Creates a new <code>IDEPresenter</code> instance.
-     *
-     */
-    private ConsoleDTO consoleDTO;
-    private CodeDTO codeDTO;
-   
-    public interface Display{
-	HasClickHandlers getRunButton();
-	HasClickHandlers getAddLangButton();
-	void setConsoleData(String data);
-	HasKeyPressHandlers getConsole();
-	String getSelectedTabValue();
-	ListBox getLangBox();
-	int getSelectedTabTypeId();
-	void setSupportedTypes(Collection<FileTypeDTO> c);
-	CodeMirror2 getEditor();
-	Widget asWidget();
+	/**
+	 * Creates a new <code>IDEPresenter</code> instance.
+	 *
+	 */
+	private ConsoleDTO consoleDTO;
+	private CodeDTO codeDTO;
 
-    }
-   
-    private final TMLServiceAsync tmlService;
-    private final HasHandlers eventBus;
-    private final Display display;
+	public interface Display{
+		HasClickHandlers getRunButton();
+		HasClickHandlers getAddLangButton();
+		void setConsoleData(String data);
+		HasKeyPressHandlers getConsole();
+		String getSelectedTabValue();
+		ListBox getLangBox();
+		int getSelectedTabTypeId();
+		void setSupportedTypes(Collection<FileTypeDTO> c);
+		CodeMirror2 getEditor();
+		Widget asWidget();
+
+	}
+
+	private final TMLServiceAsync tmlService;
+	private final HasHandlers eventBus;
+	private final Display display;
 	private ArrayList<LangParamDTO> dtos;
 
-    public IDEPresenter(TMLServiceAsync tmlService,HasHandlers eventBus, Display view, ArrayList<LangParamDTO> dtos) {
-	this.tmlService = tmlService;
-	this.eventBus = eventBus;
-	this.display = view;
-	this.dtos= dtos;
-	
-       
-    }
+	public IDEPresenter(TMLServiceAsync tmlService,HasHandlers eventBus, Display view) {
+		this.tmlService = tmlService;
+		this.eventBus = eventBus;
+		this.display = view;
+		
+		tmlService.getLangParam(new AsyncCallback<LangParamDTO>() {
 
-    public void bind() {
-	display.getRunButton().addClickHandler(new ClickHandler(){
-		public void onClick(ClickEvent event){
-		    run();
-		    
-		}
-	    });
-	display.getAddLangButton().addClickHandler(new ClickHandler(){
-	
-		public void onClick(ClickEvent event){
-			eventBus.fireEvent(new AddLangEvent());
-		}
-	});
-	for (LangParamDTO dto : dtos) {
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO catch the exception and display an error message  
+				
+			}
 
-		display.getLangBox().addItem(dto.getName().toString());
+			@Override
+			public void onSuccess(LangParamDTO result) {
+				String[] keywords = result.getKeywords().split("\\s");
+				JSONArray array = new JSONArray();
+				for (int i=0;i<keywords.length ;i++ ){
+					array.set(i,new JSONString(keywords[i]));
+
+				} 
+				String[] stringChar = result.getStringChar().trim().split("\\s");
+				JSONArray sarray = new JSONArray();
+				for (int i=0;i<stringChar.length ;i++ ){
+					sarray.set(i,new JSONString(stringChar[i]));
+
+				} 
+				
+				JSONObject mode = new JSONObject();
+				mode.put("name",new JSONString("basemode"));
+				mode.put("keywords",array);
+				mode.put("stringCh",sarray);
+				mode.put("commentSingle",new JSONString(result.getCommentSingle()));
+				mode.put("commentMStart",new JSONString(result.getCommentMStart()));
+				mode.put("commentMEnd",new JSONString(result.getCommentMEnd()));
+				mode.put("escapeCh",new JSONString(result.getEscapeChar()));
+				mode.put("isOperatorChar",new JSONString("/"+result.getOperators()+"/"));
+				display.getEditor().setMode(mode);	
+			}
+		});
+
+
+
 	}
-	/*display.getLangBox().addChangeHandler(new ChangeHandler(){
+
+	public void bind() {
+		display.getRunButton().addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				run();
+
+			}
+		});
+		display.getAddLangButton().addClickHandler(new ClickHandler(){
+
+			public void onClick(ClickEvent event){
+				eventBus.fireEvent(new AddLangEvent());
+			}
+		});
+		
+		/*display.getLangBox().addChangeHandler(new ChangeHandler(){
 
 		public void onChange(ChangeEvent event){
 			int index = display.getLangBox().getSelectedIndex();
@@ -117,58 +151,58 @@ public class IDEPresenter implements  Presenter {
 		}
 	});*/
 
-	tmlService.getSupportedTypes(new AsyncCallback<ArrayList<FileTypeDTO>>(){
-		// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
-		public final void onFailure(final Throwable throwable) {
+		tmlService.getSupportedTypes(new AsyncCallback<ArrayList<FileTypeDTO>>(){
+			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
+			public final void onFailure(final Throwable throwable) {
 
-			//System.out.println("*************");	   
-		}
+				//System.out.println("*************");	   
+			}
 
-		public final void onSuccess(final ArrayList<FileTypeDTO> types) {
-			display.setSupportedTypes(types);		
-			System.out.println(types.size());	   
-		}
-	});
-
-
-    }
+			public final void onSuccess(final ArrayList<FileTypeDTO> types) {
+				display.setSupportedTypes(types);		
+				System.out.println(types.size());	   
+			}
+		});
 
 
-    // Implementation of com.liu.trymylanguage.client.presenter.Presenter
-
-    /**
-     * Describe <code>go</code> method here.
-     *
-     * @param hasWidgets a <code>HasWidgets</code> value
-     */
-    public final void go(final HasWidgets container) {
-	    bind();
-	    container.clear();
-	    container.add(display.asWidget());
-    }
+	}
 
 
-    /**
-     * Describe <code>run</code> method here.
-     *
-     */
-    private void run(){
-	    CodeDTO codeDTO = new CodeDTO();
-	    codeDTO.setCode(display.getSelectedTabValue());
-	    codeDTO.setTypeId(display.getSelectedTabTypeId());
-	    tmlService.compile(codeDTO, new AsyncCallback<ConsoleDTO>(){
-		    // Implementation of com.google.gwt.user.client.rpc.AsyncCallback
+	// Implementation of com.liu.trymylanguage.client.presenter.Presenter
 
-		    public final void onFailure(final Throwable throwable) {
+	/**
+	 * Describe <code>go</code> method here.
+	 *
+	 * @param hasWidgets a <code>HasWidgets</code> value
+	 */
+	public final void go(final HasWidgets container) {
+		bind();
+		container.clear();
+		container.add(display.asWidget());
+	}
 
-		    }
 
-		    public final void onSuccess(final ConsoleDTO consoleDTO) {
-			    display.setConsoleData(consoleDTO.getContent());
+	/**
+	 * Describe <code>run</code> method here.
+	 *
+	 */
+	private void run(){
+		CodeDTO codeDTO = new CodeDTO();
+		codeDTO.setCode(display.getSelectedTabValue());
+		codeDTO.setTypeId(display.getSelectedTabTypeId());
+		tmlService.compile(codeDTO, new AsyncCallback<ConsoleDTO>(){
+			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
 
-			    System.out.println("failed");
+			public final void onFailure(final Throwable throwable) {
 
-		    }
-	    });
-    }
+			}
+
+			public final void onSuccess(final ConsoleDTO consoleDTO) {
+				display.setConsoleData(consoleDTO.getContent());
+
+				System.out.println("failed");
+
+			}
+		});
+	}
 }

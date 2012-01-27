@@ -1,6 +1,7 @@
 package com.liu.trymylanguage.client.view;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -38,80 +39,81 @@ public class NewLangUi extends Composite implements NewLangPresenter.Display{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
+		
 		return nameTextBox.getText();
 	}
 
 	@Override
 	public String getKeywords() {
-		// TODO Auto-generated method stub
+		
 		return keywordsTextArea.getText();
 	}
 
 	@Override
 	public String getOperators() {
-		// TODO Auto-generated method stub
+		
 		return operatorsTextBox.getText();
 	}
 
 	@Override
 	public String getCommentSingle() {
-		// TODO Auto-generated method stub
+		
 		return commentSingleTextBox.getText();
 	}
 
 	@Override
 	public String getCommentMStart() {
-		// TODO Auto-generated method stub
+		
 		return commentMStartTextBox.getText();
 	}
 
 	@Override
 	public String getCommentMEnd() {
-		// TODO Auto-generated method stub
+		
 		return commentMEndTextBox.getText();
 	}
 
 	@Override
 	public String getEscapeChar() {
-		// TODO Auto-generated method stub
 		return escapeCharTextBox.getText();
 	}
 
 	@Override
 	public String getStringChar() {
-		// TODO Auto-generated method stub
+		
 		return stringCharTextBox.getText();
 	}
 
-	@Override
-	public Button getSaveButton() {
-		// TODO Auto-generated method stub
-		return saveButton;
-	}
+	
 
 	@Override
 	public String getTimeout() {
-		// TODO Auto-generated method stub
+		
 		return timeoutTextBox.getText();
 	}
 
 	@Override
 	public String getCompileCmd() {
-		// TODO Auto-generated method stub
+		
 		return compileTextBox.getText();
 	}
 
 	@Override
 	public String getRunCmd() {
-		// TODO Auto-generated method stub
+		
 		return runTextBox.getText();
 	}
 
 	@Override
 	public String getFeedbackRegex() {
-		// TODO Auto-generated method stub
+		
 		return feedbackTextBox.getText();
+	}
+
+	@Override
+	public void addSaveButtonClickHandler(ClickHandler handler) {
+		
+		saveButton.addClickHandler(handler);
 	}
 
 }

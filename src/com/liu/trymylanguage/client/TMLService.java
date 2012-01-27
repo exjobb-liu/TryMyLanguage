@@ -16,6 +16,6 @@ public interface TMLService extends RemoteService {
     ConsoleDTO compile(CodeDTO source);
     ConsoleDTO run(CodeDTO source);
     ArrayList<FileTypeDTO> getSupportedTypes(); 
-    void saveLang(LangParamDTO dto) throws FileNotFoundException;
-    LangParamDTO getLangParam() throws FileNotFoundException; 
+    void saveLang(LangParamDTO dto);
+    LangParamDTO getLangParam(); 
 }
