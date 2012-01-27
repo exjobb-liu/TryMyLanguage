@@ -8,34 +8,34 @@
 <g:HTMLPanel>
 	<h1>Enter the specification of the language. You can seperate entities with space.</h1>
 	<g:Label>Name:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="nameTextBox"></g:TextBox>
 	<g:Label>Keywords:</g:Label>
-	<g:TextArea></g:TextArea>
+	<g:TextArea ui:field="keywordsTextArea"></g:TextArea>
 	<g:Label>Character(s) for single line comment:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="commentSingleTextBox"></g:TextBox>
 	<g:Label>Character(s) for start of the multiple line comment:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="commentMStartTextBox"></g:TextBox>
 	<g:Label>Character(s) for end of the multiple line comment:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="commentMEndTextBox"></g:TextBox>
 	<g:Label>Character(s) for specifing the start and end of an string:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="stringCharTextBox"></g:TextBox>
 	<g:Label>Character for escaping string character within a string:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="escapeCharTextBox"></g:TextBox>
 	<g:Label>Operator characters:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="operatorsTextBox"></g:TextBox>
 	
 </g:HTMLPanel>
 
 <g:HTMLPanel>
 	<h1>Define Compiler Configuration here</h1>
 	<g:Label>Compilation and Execution Timeout:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="timeoutTextBox"></g:TextBox>
 	<g:Label>Compile Command:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="compileTextBox"></g:TextBox>
 	<g:Label>Run Command:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="runTextBox"></g:TextBox>
 	<g:Label>Regular Expression for Line Feedback:</g:Label>
-	<g:TextBox></g:TextBox>
+	<g:TextBox ui:field="feedbackTextBox"></g:TextBox>
 </g:HTMLPanel>
 
 </g:HorizontalPanel>

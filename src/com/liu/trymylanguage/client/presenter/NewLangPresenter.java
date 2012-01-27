@@ -26,6 +26,10 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 		String getCommentMEnd();
 		String getEscapeChar();
 		String getStringChar();
+		String getTimeout();
+		String getCompileCmd();
+		String getRunCmd();
+		String getFeedbackRegex();
 		Button getSaveButton();
 		Widget asWidget();
 	
@@ -91,14 +95,14 @@ langDTO.setCommentSingle(display.getCommentSingle()
 			sarray.set(i,new JSONString(stringChar[i]));
 
 		} 
-		dto.setStringChar(sarray);
-		dto.setKeywords(array);
-		dto.setName(new JSONString(display.getName()));
-		dto.setCommentMEnd(new JSONString(display.getCommentMEnd()));
-		dto.setCommentMStart(new JSONString(display.getCommentMStart()));
-		dto.setCommentSingle(new JSONString(display.getCommentSingle()));
-		dto.setEscapeChar(new JSONString(display.getEscapeChar()));
-		dto.setOperators(new JSONString(display.getOperators()));
+		dto.setStringChar(display.getStringChar().trim());
+		dto.setKeywords(display.getKeywords().trim());
+		dto.setName(display.getName());
+		dto.setCommentMEnd(display.getCommentMEnd());
+		dto.setCommentMStart(display.getCommentMStart());
+		dto.setCommentSingle(display.getCommentSingle());
+		dto.setEscapeChar(display.getEscapeChar());
+		dto.setOperators(display.getOperators());
 
 		eventBus.fireEvent(new SaveLangEvent(dto));
 

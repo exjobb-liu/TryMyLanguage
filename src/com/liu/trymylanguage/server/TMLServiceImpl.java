@@ -8,12 +8,23 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.liu.trymylanguage.client.TMLService;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+
 import com.liu.trymylanguage.shared.ConsoleDTO;
 import com.liu.trymylanguage.shared.CodeDTO;
+import com.liu.trymylanguage.shared.LangParamDTO;
+
 import java.io.InputStreamReader;
 
 import com.liu.trymylanguage.shared.FileTypeDTO;
@@ -40,7 +51,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	    
 	    
 	    //ProcessBuilder bp = new ProcessBuilder("javac "+code.getFileName()+".java");
-	    ProcessBuilder bp = new ProcessBuilder("ls");
+	    ProcessBuilder bp = new ProcessBuilder("/bin/ls");
 	    bp.redirectErrorStream(true);
 	    bp.directory(new File("/home/amir/TryMyLanguage"));
 	    Process p = bp.start();
@@ -84,4 +95,31 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	else 
 	    return "default";
     }
+	@Override
+	public void saveLang(LangParamDTO dto) throws FileNotFoundException{
+		try {
+			ObjectOutput output = new ObjectOutputStream(new FileOutputStream("langparam.bin"));
+			output.writeObject(dto);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	@Override
+	public LangParamDTO getLangParam() throws FileNotFoundException{
+		
+		LangParamDTO dto = null;
+		try {
+			ObjectInput obj = new ObjectInputStream(new BufferedInputStream(new FileInputStream("langparam.bin")));
+			dto = (LangParamDTO)obj.readObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dto;
+	}
 }

@@ -99,7 +99,7 @@ public class IDEPresenter implements  Presenter {
 
 		display.getLangBox().addItem(dto.getName().toString());
 	}
-	display.getLangBox().addChangeHandler(new ChangeHandler(){
+	/*display.getLangBox().addChangeHandler(new ChangeHandler(){
 
 		public void onChange(ChangeEvent event){
 			int index = display.getLangBox().getSelectedIndex();
@@ -115,7 +115,7 @@ public class IDEPresenter implements  Presenter {
 			mode.put("isOperatorChar",dto.getOperators());
 			display.getEditor().setMode(mode);	
 		}
-	});
+	});*/
 
 	tmlService.getSupportedTypes(new AsyncCallback<ArrayList<FileTypeDTO>>(){
 		// Implementation of com.google.gwt.user.client.rpc.AsyncCallback

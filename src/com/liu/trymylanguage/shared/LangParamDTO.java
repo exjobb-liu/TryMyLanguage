@@ -1,23 +1,29 @@
 package com.liu.trymylanguage.shared;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONString;
+import java.io.Serializable;
 
-public class LangParamDTO {
-	private JSONString name;
-	private JSONArray keywords;
-	private JSONString operators;
-	private JSONString commentSingle;
-	private JSONString commentMStart;
-	private JSONString commentMEnd;
-	private JSONString escapeChar;
-	private JSONArray stringChar;
+
+public class LangParamDTO implements Serializable {
+	private String name;
+	private String keywords;
+	private String operators;
+	private String commentSingle;
+	private String commentMStart;
+	private String commentMEnd;
+	private String escapeChar;
+	private String stringChar;
+	private String	compileCmd;
+	private String feedbackRegex;
+	private String runCmd; 
+	private String timeout; 
+
+	
 	/**
 	 * Gets the name for this instance.
 	 *
 	 * @return The name.
 	 */
-	public JSONString getName()
+	public String getName()
 	{
 		return this.name;
 	}
@@ -26,7 +32,7 @@ public class LangParamDTO {
 	 *
 	 * @param name The name.
 	 */
-	public void setName(JSONString name)
+	public void setName(String name)
 	{
 		this.name = name;
 	}
@@ -35,7 +41,7 @@ public class LangParamDTO {
 	 *
 	 * @return The keywords.
 	 */
-	public JSONArray getKeywords()
+	public String getKeywords()
 	{
 		return this.keywords;
 	}
@@ -44,7 +50,7 @@ public class LangParamDTO {
 	 *
 	 * @param keywords The keywords.
 	 */
-	public void setKeywords(JSONArray keywords)
+	public void setKeywords(String keywords)
 	{
 		this.keywords = keywords;
 	}
@@ -53,7 +59,7 @@ public class LangParamDTO {
 	 *
 	 * @return The operators.
 	 */
-	public JSONString getOperators()
+	public String getOperators()
 	{
 		return this.operators;
 	}
@@ -62,7 +68,7 @@ public class LangParamDTO {
 	 *
 	 * @param operators The operators.
 	 */
-	public void setOperators(JSONString operators)
+	public void setOperators(String operators)
 	{
 		this.operators = operators;
 	}
@@ -71,7 +77,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentSingle.
 	 */
-	public JSONString getCommentSingle()
+	public String getCommentSingle()
 	{
 		return this.commentSingle;
 	}
@@ -80,7 +86,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentSingle The commentSingle.
 	 */
-	public void setCommentSingle(JSONString commentSingle)
+	public void setCommentSingle(String commentSingle)
 	{
 		this.commentSingle = commentSingle;
 	}
@@ -89,7 +95,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentMStart.
 	 */
-	public JSONString getCommentMStart()
+	public String getCommentMStart()
 	{
 		return this.commentMStart;
 	}
@@ -98,7 +104,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentMStart The commentMStart.
 	 */
-	public void setCommentMStart(JSONString commentMStart)
+	public void setCommentMStart(String commentMStart)
 	{
 		this.commentMStart = commentMStart;
 	}
@@ -107,7 +113,7 @@ public class LangParamDTO {
 	 *
 	 * @return The commentMEnd.
 	 */
-	public JSONString getCommentMEnd()
+	public String getCommentMEnd()
 	{
 		return this.commentMEnd;
 	}
@@ -116,7 +122,7 @@ public class LangParamDTO {
 	 *
 	 * @param commentMEnd The commentMEnd.
 	 */
-	public void setCommentMEnd(JSONString commentMEnd)
+	public void setCommentMEnd(String commentMEnd)
 	{
 		this.commentMEnd = commentMEnd;
 	}
@@ -125,7 +131,7 @@ public class LangParamDTO {
 	 *
 	 * @return The escapeChar.
 	 */
-	public JSONString getEscapeChar()
+	public String getEscapeChar()
 	{
 		return this.escapeChar;
 	}
@@ -134,7 +140,7 @@ public class LangParamDTO {
 	 *
 	 * @param escapeChar The escapeChar.
 	 */
-	public void setEscapeChar(JSONString escapeChar)
+	public void setEscapeChar(String escapeChar)
 	{
 		this.escapeChar = escapeChar;
 	}
@@ -143,7 +149,7 @@ public class LangParamDTO {
 	 *
 	 * @return The stringChar.
 	 */
-	public JSONArray getStringChar()
+	public String getStringChar()
 	{
 		return this.stringChar;
 	}
@@ -152,9 +158,81 @@ public class LangParamDTO {
 	 *
 	 * @param stringChar The stringChar.
 	 */
-	public void setStringChar(JSONArray stringChar)
+	public void setStringChar(String stringChar)
 	{
 		this.stringChar = stringChar;
+	}
+	/**
+	 * Gets the compileCmd for this instance.
+	 *
+	 * @return The compileCmd.
+	 */
+	public String getCompileCmd()
+	{
+		return this.compileCmd;
+	}
+	/**
+	 * Sets the compileCmd for this instance.
+	 *
+	 * @param compileCmd The compileCmd.
+	 */
+	public void setCompileCmd(String compileCmd)
+	{
+		this.compileCmd = compileCmd;
+	}
+	/**
+	 * Gets the feedbackRegex for this instance.
+	 *
+	 * @return The feedbackRegex.
+	 */
+	public String getFeedbackRegex()
+	{
+		return this.feedbackRegex;
+	}
+	/**
+	 * Sets the feedbackRegex for this instance.
+	 *
+	 * @param feedbackRegex The feedbackRegex.
+	 */
+	public void setFeedbackRegex(String feedbackRegex)
+	{
+		this.feedbackRegex = feedbackRegex;
+	}
+	/**
+	 * Gets the runCmd for this instance.
+	 *
+	 * @return The runCmd.
+	 */
+	public String getRunCmd()
+	{
+		return this.runCmd;
+	}
+	/**
+	 * Sets the runCmd for this instance.
+	 *
+	 * @param runCmd The runCmd.
+	 */
+	public void setRunCmd(String runCmd)
+	{
+		this.runCmd = runCmd;
+	}
+	/**
+	 * Gets the timeout for this instance.
+	 *
+	 * @return The timeout.
+	 */
+	public String getTimeout()
+	{
+		return this.timeout;
+	}
+	/**
+	 * Sets the timeout for this instance.
+	 *
+	 * @param timeout The timeout.
+	 */
+	public void setTimeout(String timeout)
+	{
+		this.timeout = timeout;
 	}
 
 }

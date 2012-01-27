@@ -20,7 +20,6 @@ import com.liu.trymylanguage.client.presenter.IDEPresenter;
 
 import com.liu.trymylanguage.client.view.IDEView;
 import com.liu.trymylanguage.client.view.NewLangUi;
-import com.liu.trymylanguage.client.view.NewLangView;
 
 import com.liu.trymylanguage.shared.LangParamDTO;
 
