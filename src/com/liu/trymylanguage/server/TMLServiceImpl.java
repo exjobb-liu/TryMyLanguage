@@ -35,6 +35,9 @@ import org.buildobjects.process.ProcBuilder;
 import com.liu.trymylanguage.shared.FileTypeDTO;
 
 public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
+	
+	
+	
 	public ConsoleDTO compile(CodeDTO code) throws Exception {
 
 		LangParamDTO dto = this.getLangParam();
@@ -76,9 +79,12 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			this.deleteDir(dir);
 			
 		}
-		
+		String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
+		regex = regex.replaceAll("<filename>",code.getFileName());
+		regex = regex.replaceAll("<suffix>",dto.getSuffix());
 
-		return new ConsoleDTO(result,true);
+
+		return new ConsoleDTO(result,TmlUtil.getErrorMap(result.split("\\n"), regex));
 		}else
 			throw new Exception("A user directory to place the source and executable file can not be created");
 
@@ -94,21 +100,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	 * {@inheritDoc}
 	 * @see TMLService#getSupportedTypes()
 	 */
-	public ArrayList<FileTypeDTO> getSupportedTypes()
-	{
-		ArrayList<FileTypeDTO> mock = new ArrayList<FileTypeDTO>();
-		mock.add(new FileTypeDTO("1","java"));
-		return mock;
-
-	}
-	public String fileName(String patternstr, String code) {
-		Pattern pattern = Pattern.compile(patternstr);
-		Matcher matcher = pattern.matcher(code);
-		if(matcher.find())
-			return  code.substring(matcher.start()+6,matcher.end()).trim();
-		else 
-			return "default";
-	}
+	
 	@Override
 	public void saveLang(LangParamDTO dto) {
 		try {
@@ -166,7 +158,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			builder.run();
 		} catch (ExternalProcessFailureException e) {
 			
-			out += e.getStderr();
+			out = e.getStderr();
 			
 		}
 		        
@@ -174,7 +166,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		return out;
 
 	}
-	public boolean deleteDir(File dir) {
+	private boolean deleteDir(File dir) {
 	    if (dir.isDirectory()) {
 	        String[] children = dir.list();
 	        for (int i=0; i<children.length; i++) {
@@ -188,5 +180,6 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	    // The directory is now empty so delete it
 	    return dir.delete();
 	}
+	
 	
 }

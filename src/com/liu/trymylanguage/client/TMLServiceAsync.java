@@ -11,7 +11,6 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 public interface TMLServiceAsync {
 
     void compile(CodeDTO code, AsyncCallback<ConsoleDTO> callback);
-    void getSupportedTypes(AsyncCallback<ArrayList<FileTypeDTO>> callback);
-	void saveLang(LangParamDTO dto, AsyncCallback<Void> callback);
+    void saveLang(LangParamDTO dto, AsyncCallback<Void> callback);
 	void getLangParam(AsyncCallback<LangParamDTO> callback);
 }

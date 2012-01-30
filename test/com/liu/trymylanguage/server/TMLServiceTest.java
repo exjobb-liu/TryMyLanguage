@@ -43,7 +43,7 @@ public class TMLServiceTest  {
 "import java.io.InputStreamReader;"+
 
 "public class Hello{"+
-     "public static void main(String argsv[]){"+
+     "public static void main(String argsv[]){\n"+
 	"System.out.println(\"Hello\");"+
 	"/*String out = null;"+
 	"try {"+
@@ -69,7 +69,7 @@ public class TMLServiceTest  {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-		System.out.println(p.getContent());
+		System.out.println(p.getLineFeedback().get(1));
 	assertTrue("Hello\n".equals(p.getContent()));
 	
 	
@@ -84,7 +84,7 @@ public class TMLServiceTest  {
     	dto.setCommentSingle("//");
     	dto.setCompileCmd("javac <filename>.<suffix>");
     	dto.setEscapeChar("\\");
-    	dto.setFeedbackRegex("regex");
+    	dto.setFeedbackRegex("<filename>.<suffix>:@:");
     	dto.setKeywords("test class");
     	dto.setName("java");
     	dto.setOperators("+-");
@@ -121,7 +121,7 @@ public class TMLServiceTest  {
     	dto.setCommentSingle("//");
     	dto.setCompileCmd("javac <filename>.<suffix>");
     	dto.setEscapeChar("\\");
-    	dto.setFeedbackRegex("regex");
+    	dto.setFeedbackRegex("<filename>.<suffix>:@:");
     	dto.setKeywords("test class");
     	dto.setName("java");
     	dto.setOperators("+-");

@@ -151,18 +151,7 @@ public class IDEPresenter implements  Presenter {
 		}
 	});*/
 
-		tmlService.getSupportedTypes(new AsyncCallback<ArrayList<FileTypeDTO>>(){
-			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
-			public final void onFailure(final Throwable throwable) {
-
-				//System.out.println("*************");	   
-			}
-
-			public final void onSuccess(final ArrayList<FileTypeDTO> types) {
-				display.setSupportedTypes(types);		
-				System.out.println(types.size());	   
-			}
-		});
+		
 
 
 	}

@@ -1,5 +1,7 @@
 package com.liu.trymylanguage.shared;
 
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: amir
@@ -17,13 +19,13 @@ public class ConsoleDTO implements java.io.Serializable {
     /**
      * Describe isTerminated here.
      */
-    private boolean isTerminated;
-
+    
+    private Map<Integer,Integer> lineFeedback;
 
     public ConsoleDTO(){}
-    public ConsoleDTO(String content, boolean isTerminated){
+    public ConsoleDTO(String content,Map<Integer,Integer> lineFeedback){
     	this.content=content;
-    	this.isTerminated = isTerminated;
+    	this.lineFeedback = lineFeedback;
     }
 
 
@@ -36,7 +38,13 @@ public class ConsoleDTO implements java.io.Serializable {
     	return content;
     }
 
-    /**
+    public Map<Integer, Integer> getLineFeedback() {
+		return lineFeedback;
+	}
+	public void setLineFeedback(Map<Integer, Integer> lineFeedback) {
+		this.lineFeedback = lineFeedback;
+	}
+	/**
      * Set the <code>Content</code> value.
      *
      * @param newContent The new Content value.
@@ -45,21 +53,5 @@ public class ConsoleDTO implements java.io.Serializable {
 	this.content = newContent;
     }
 
-    /**
-     * Get the <code>IsTerminated</code> value.
-     *
-     * @return a <code>boolean</code> value
-     */
-    public boolean isIsTerminated() {
-	return isTerminated;
-    }
-
-    /**
-     * Set the <code>IsTerminated</code> value.
-     *
-     * @param newIsTerminated The new IsTerminated value.
-     */
-    public void setIsTerminated(boolean newIsTerminated) {
-	this.isTerminated = newIsTerminated;
-    }
+   
 }
