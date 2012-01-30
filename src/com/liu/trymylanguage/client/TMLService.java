@@ -13,8 +13,8 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 @RemoteServiceRelativePath("tmlservice")
 public interface TMLService extends RemoteService {
 
-    ConsoleDTO compile(CodeDTO source);
-    ConsoleDTO run(CodeDTO source);
+    ConsoleDTO compile(CodeDTO source) throws Exception;
+    
     ArrayList<FileTypeDTO> getSupportedTypes(); 
     void saveLang(LangParamDTO dto);
     LangParamDTO getLangParam(); 

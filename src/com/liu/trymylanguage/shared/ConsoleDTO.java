@@ -22,8 +22,8 @@ public class ConsoleDTO implements java.io.Serializable {
 
     public ConsoleDTO(){}
     public ConsoleDTO(String content, boolean isTerminated){
-	this.content=content;
-	this.isTerminated = isTerminated;
+    	this.content=content;
+    	this.isTerminated = isTerminated;
     }
 
 
@@ -33,7 +33,7 @@ public class ConsoleDTO implements java.io.Serializable {
      * @return a <code>String</code> value
      */
     public  String getContent() {
-	return content;
+    	return content;
     }
 
     /**

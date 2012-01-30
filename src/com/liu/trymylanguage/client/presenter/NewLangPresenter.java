@@ -32,6 +32,7 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 		String getCompileCmd();
 		String getRunCmd();
 		String getFeedbackRegex();
+		String getSuffix();
 		void addSaveButtonClickHandler(ClickHandler handler);
 		Widget asWidget();
 	
@@ -113,7 +114,8 @@ langDTO.setCommentSingle(display.getCommentSingle()
 		dto.setOperators(display.getOperators().trim());
 		dto.setRunCmd(display.getRunCmd().trim());
 		dto.setStringChar(display.getStringChar().trim());
-		dto.setTimeout(display.getTimeout().trim());
+		dto.setTimeout(Long.parseLong(display.getTimeout().trim()));
+		dto.setSuffix(display.getSuffix().trim());
 		
 		rpcService.saveLang(dto, new AsyncCallback<Void>() {
 			

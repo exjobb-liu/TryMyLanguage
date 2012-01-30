@@ -60,8 +60,15 @@ public class TMLServiceTest  {
     "}"+
 "}";
 	CodeDTO codeDTO = new CodeDTO();
+	codeDTO.setFileName("Hello");
 	codeDTO.setCode(code);
-	ConsoleDTO p = cmps.compile(codeDTO);
+	ConsoleDTO p = null;
+	try {
+		p = cmps.compile(codeDTO);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 		System.out.println(p.getContent());
 	assertTrue("Hello\n".equals(p.getContent()));
 	
@@ -75,7 +82,7 @@ public class TMLServiceTest  {
     	dto.setCommentMEnd("*/");
     	dto.setCommentMStart("/*");
     	dto.setCommentSingle("//");
-    	dto.setCompileCmd("javac <filename>.java");
+    	dto.setCompileCmd("javac <filename>.<suffix>");
     	dto.setEscapeChar("\\");
     	dto.setFeedbackRegex("regex");
     	dto.setKeywords("test class");
@@ -83,7 +90,8 @@ public class TMLServiceTest  {
     	dto.setOperators("+-");
     	dto.setRunCmd("java <filename>");
     	dto.setStringChar("\" \'");
-    	dto.setTimeout("3000");
+    	dto.setTimeout(6000);
+    	dto.setSuffix("java");
     	LangParamDTO dto1 = null;
     	
     	try {
@@ -111,7 +119,7 @@ public class TMLServiceTest  {
     	dto.setCommentMEnd("*/");
     	dto.setCommentMStart("/*");
     	dto.setCommentSingle("//");
-    	dto.setCompileCmd("javac <filename>.java");
+    	dto.setCompileCmd("javac <filename>.<suffix>");
     	dto.setEscapeChar("\\");
     	dto.setFeedbackRegex("regex");
     	dto.setKeywords("test class");
@@ -119,7 +127,8 @@ public class TMLServiceTest  {
     	dto.setOperators("+-");
     	dto.setRunCmd("java <filename>");
     	dto.setStringChar("\" \'");
-    	dto.setTimeout("3000");
+    	dto.setTimeout(6000);
+    	dto.setSuffix("java");
     	LangParamDTO dto1 = null;
     	
     	try {

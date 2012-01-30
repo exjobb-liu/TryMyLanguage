@@ -27,6 +27,9 @@ public class NewLangUi extends Composite implements NewLangPresenter.Display{
 	@UiField TextBox compileTextBox;
 	@UiField TextBox runTextBox;
 	@UiField TextBox feedbackTextBox;
+	@UiField TextBox suffixTextBox;
+
+	
 	private static NewLangUiUiBinder uiBinder = GWT
 			.create(NewLangUiUiBinder.class);
 
@@ -108,6 +111,11 @@ public class NewLangUi extends Composite implements NewLangPresenter.Display{
 	public String getFeedbackRegex() {
 		
 		return feedbackTextBox.getText();
+	}
+	
+	
+	public String getSuffix(){
+		return suffixTextBox.getText();
 	}
 
 	@Override

@@ -15,9 +15,16 @@ public class LangParamDTO implements Serializable {
 	private String	compileCmd;
 	private String feedbackRegex;
 	private String runCmd; 
-	private String timeout; 
+	private long timeout; 
+	private String suffix;
 
 	
+	public String getSuffix() {
+		return suffix;
+	}
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
 	/**
 	 * Gets the name for this instance.
 	 *
@@ -221,7 +228,7 @@ public class LangParamDTO implements Serializable {
 	 *
 	 * @return The timeout.
 	 */
-	public String getTimeout()
+	public long getTimeout()
 	{
 		return this.timeout;
 	}
@@ -230,7 +237,7 @@ public class LangParamDTO implements Serializable {
 	 *
 	 * @param timeout The timeout.
 	 */
-	public void setTimeout(String timeout)
+	public void setTimeout(long timeout)
 	{
 		this.timeout = timeout;
 	}

@@ -24,25 +24,7 @@ public class CodeDTO implements java.io.Serializable {
     /**
      * Describe type here.
      */
-    private int typeId;
-
-    /**
-     * Get the <code>Type</code> value.
-     *
-     * @return a <code>String</code> value
-     */
-    public final int getTypeId() {
-	return typeId;
-    }
-
-    /**
-     * Set the <code>Type</code> value.
-     *
-     * @param newType The new Type value.
-     */
-    public final void setTypeId(final int newTypeId) {
-	this.typeId = newTypeId;
-    }
+   
     /**
      * Get the <code>Code</code> value.
      *

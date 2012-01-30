@@ -189,7 +189,7 @@ public class IDEPresenter implements  Presenter {
 	private void run(){
 		CodeDTO codeDTO = new CodeDTO();
 		codeDTO.setCode(display.getSelectedTabValue());
-		codeDTO.setTypeId(display.getSelectedTabTypeId());
+		
 		tmlService.compile(codeDTO, new AsyncCallback<ConsoleDTO>(){
 			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
 
