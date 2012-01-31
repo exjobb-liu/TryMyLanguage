@@ -10,6 +10,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.event.shared.HasHandlers;
 
@@ -65,6 +67,7 @@ public class IDEPresenter implements  Presenter {
 		int getSelectedTabTypeId();
 		void setSupportedTypes(Collection<FileTypeDTO> c);
 		CodeMirror2 getEditor();
+		void showError(String message,String closeButtonText,ClickHandler close);
 		Widget asWidget();
 
 	}
@@ -72,9 +75,8 @@ public class IDEPresenter implements  Presenter {
 	private final TMLServiceAsync tmlService;
 	private final HasHandlers eventBus;
 	private final Display display;
-	private ArrayList<LangParamDTO> dtos;
 
-	public IDEPresenter(TMLServiceAsync tmlService,HasHandlers eventBus, Display view) {
+	public IDEPresenter(TMLServiceAsync tmlService,final HasHandlers eventBus, Display view) {
 		this.tmlService = tmlService;
 		this.eventBus = eventBus;
 		this.display = view;
@@ -83,8 +85,12 @@ public class IDEPresenter implements  Presenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO catch the exception and display an error message  
+				display.showError(caught.getMessage(),"Click here to define a language",new ClickHandler(){
+					public void onClick(ClickEvent event){
+						eventBus.fireEvent(new AddLangEvent());	
+					}
 				
+				});
 			}
 
 			@Override
@@ -122,6 +128,7 @@ public class IDEPresenter implements  Presenter {
 	public void bind() {
 		display.getRunButton().addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
+				
 				run();
 
 			}
@@ -182,14 +189,14 @@ public class IDEPresenter implements  Presenter {
 		tmlService.compile(codeDTO, new AsyncCallback<ConsoleDTO>(){
 			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
 
-			public final void onFailure(final Throwable throwable) {
+			public  void onFailure(Throwable throwable) {
 
 			}
 
-			public final void onSuccess(final ConsoleDTO consoleDTO) {
+			public void onSuccess(ConsoleDTO consoleDTO) {
 				display.setConsoleData(consoleDTO.getContent());
 
-				System.out.println("failed");
+				System.out.println("clicked");
 
 			}
 		});

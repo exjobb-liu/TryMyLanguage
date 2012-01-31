@@ -18,6 +18,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -115,17 +116,22 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 
 	}
 	@Override
-	public LangParamDTO getLangParam() {
+	public LangParamDTO getLangParam() throws Exception{
 
 		LangParamDTO dto = null;
 		try {
 			ObjectInput obj = new ObjectInputStream(new BufferedInputStream(new FileInputStream("langparam.bin")));
 			dto = (LangParamDTO)obj.readObject();
 			obj.close();
-		} catch (IOException e) {
-
-			// TODO Auto-generated catch block
+			
+		} 
+		catch (FileNotFoundException e){
+			throw new Exception("No Language configuration is found");
+		}catch (IOException e) {
 			e.printStackTrace();
+			throw new Exception("Language configuration can not be loaded");
+			// TODO Auto-generated catch block
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

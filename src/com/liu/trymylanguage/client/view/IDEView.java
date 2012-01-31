@@ -3,6 +3,9 @@ package com.liu.trymylanguage.client.view;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.event.logical.shared.AttachEvent;
 
 import com.google.gwt.json.client.JSONArray;
@@ -12,10 +15,15 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+
+import com.liu.trymylanguage.client.ErrorDialog;
+
+import com.liu.trymylanguage.client.event.AddLangEvent;
 import com.liu.trymylanguage.client.presenter.IDEPresenter;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -61,8 +69,9 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	private CodeMirror2 editor;
 	private CodeMirrorConf conf;
 	private ScrollPanel codeMirrorPanel;
+	private ErrorDialog errorDialog = new ErrorDialog();
 	public IDEView(){
-
+		
 		codeMirrorPanel = new ScrollPanel();
 
 		conf= new CodeMirrorConf();
@@ -154,6 +163,14 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	@Override
 	public CodeMirror2 getEditor() {
 		return editor;
+	}
+	@Override
+	public void showError(String error, String closeText, ClickHandler closeHandler) {
+		errorDialog.setMessage(error);
+		errorDialog.center();
+		errorDialog.setCloseButtonText(closeText);
+		errorDialog.addCloseButtonClickHandler(closeHandler);		
+		errorDialog.show();
 	}
 
 }
