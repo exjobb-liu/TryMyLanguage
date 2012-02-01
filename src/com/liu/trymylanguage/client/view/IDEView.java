@@ -15,8 +15,10 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 
 import com.liu.trymylanguage.client.ErrorDialog;
+import com.liu.trymylanguage.client.TabWidget;
 
 import com.liu.trymylanguage.client.event.AddLangEvent;
 import com.liu.trymylanguage.client.presenter.IDEPresenter;
@@ -25,7 +27,11 @@ import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ProvidesResize;
+import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Button;
@@ -40,6 +46,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.layout.client.Layout;
 import com.google.gwt.layout.client.Layout.Alignment;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.AttachEvent;
@@ -56,7 +63,7 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 public class IDEView extends Composite implements IDEPresenter.Display{
 	private SplitLayoutPanel mainPanel = new SplitLayoutPanel();
 
-	private LayoutPanel editorPanel = new LayoutPanel();
+	
 	private Button runButton = new Button(" Run ");
 	private Button addLangButton = new Button("+");
 	private Button upButton = new Button();
@@ -65,11 +72,14 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	private ListBox chooseLanguageBox = new ListBox();
 	private TextArea tutorialArea = new TextArea();
 	private TextArea consoleArea = new TextArea();
-	private FlowPanel toolbarPanel = new FlowPanel();
+	private HorizontalPanel toolbarPanel = new HorizontalPanel();
 	private CodeMirror2 editor;
 	private CodeMirrorConf conf;
 	private ScrollPanel codeMirrorPanel;
 	private ErrorDialog errorDialog = new ErrorDialog();
+	private TabLayoutPanel editorTabPanel = new TabLayoutPanel(2.5, Unit.EM);
+	private TabWidget tabWidget; 
+	
 	public IDEView(){
 		
 		codeMirrorPanel = new ScrollPanel();
@@ -88,21 +98,31 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 		codeMirrorPanel.add(editor);
 
-		toolbarPanel.add(runButton);
-		toolbarPanel.add(chooseLanguageBox);
-		toolbarPanel.add(addLangButton);
-		runButton.addAttachHandler(new Handler(){
+		//toolbarPanel.add(runButton);
+		
+		/*runButton.addAttachHandler(new Handler(){
 			public void onAttachOrDetach(AttachEvent event){
 				editorPanel.setWidgetTopHeight(toolbarPanel,0,Unit.PX,runButton.getOffsetHeight(),Unit.PX);
 
 				editorPanel.setWidgetTopBottom(codeMirrorPanel,runButton.getOffsetHeight(),Unit.PX,0,Unit.PX);
 				System.out.println(runButton.getOffsetHeight());
 			}
-		});
+		});*/
+		
+		
 		//Attach widgets to editorPanel
-		editorPanel.add(toolbarPanel);
-		editorPanel.add(codeMirrorPanel);
-
+		toolbarPanel.add(runButton);
+		
+		
+		
+		tabWidget = new TabWidget("default", new ClickHandler(){
+				public void onClick(ClickEvent event){
+					editorTabPanel.remove(codeMirrorPanel);
+					
+				} 
+		
+		});	
+		editorTabPanel.add(codeMirrorPanel,tabWidget);
 		//	editorPanel.setWidgetVerticalPosition(toolbarPanel,Alignment.BEGIN);
 
 		//	editorPanel.setWidgetVerticalPosition(codeMirrorPanel,Alignment.END);
@@ -110,13 +130,13 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 		//Adding widgets to panel areas
 		mainPanel.addWest(tutorialArea,150);
-		mainPanel.addNorth(editorPanel,384);
+		mainPanel.addNorth(editorTabPanel,384);
 		mainPanel.add(consoleArea);
 
 		// Attach 3 widgets to a DockLayoutPanel
 		// Lay them out in 'em' units.
 		DockLayoutPanel lp = new DockLayoutPanel(Unit.EM);
-		lp.addNorth(new HTML("Try My Language"),2);
+		lp.addNorth(toolbarPanel,3);
 		lp.addSouth(new HTML("Footer"),2);
 		lp.add(mainPanel);
 		initWidget(lp);
@@ -125,8 +145,8 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 
 	}
-	public HasClickHandlers getRunButton(){
-		return runButton;
+	public void addRunClickHandler(ClickHandler handler){
+		runButton.addClickHandler(handler);
 	}
 	public void setConsoleData(String data){
 
@@ -172,5 +192,9 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		errorDialog.addCloseButtonClickHandler(closeHandler);		
 		errorDialog.show();
 	}
-
+	public void showError(String error){
+		errorDialog.setMessage(error);
+		errorDialog.center();
+	}
+	
 }

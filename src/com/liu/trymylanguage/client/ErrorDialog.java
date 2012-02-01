@@ -23,7 +23,7 @@ public class ErrorDialog extends DialogBox{
 			}
 		});
 		setGlassEnabled(true);
-
+		// center();
 		setHTML("<h3 style=\"color:red\">Error</h3>");
 		setWidget(content);
 

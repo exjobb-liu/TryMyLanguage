@@ -58,7 +58,7 @@ public class IDEPresenter implements  Presenter {
 	private CodeDTO codeDTO;
 
 	public interface Display{
-		HasClickHandlers getRunButton();
+		void addRunClickHandler(ClickHandler handler);
 		HasClickHandlers getAddLangButton();
 		void setConsoleData(String data);
 		HasKeyPressHandlers getConsole();
@@ -68,6 +68,7 @@ public class IDEPresenter implements  Presenter {
 		void setSupportedTypes(Collection<FileTypeDTO> c);
 		CodeMirror2 getEditor();
 		void showError(String message,String closeButtonText,ClickHandler close);
+		void showError(String messsage);
 		Widget asWidget();
 
 	}
@@ -126,7 +127,7 @@ public class IDEPresenter implements  Presenter {
 	}
 
 	public void bind() {
-		display.getRunButton().addClickHandler(new ClickHandler(){
+		display.addRunClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
 				run();
@@ -190,13 +191,13 @@ public class IDEPresenter implements  Presenter {
 			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
 
 			public  void onFailure(Throwable throwable) {
-
+				display.showError(throwable.getMessage());
 			}
 
 			public void onSuccess(ConsoleDTO consoleDTO) {
 				display.setConsoleData(consoleDTO.getContent());
 
-				System.out.println("clicked");
+			
 
 			}
 		});

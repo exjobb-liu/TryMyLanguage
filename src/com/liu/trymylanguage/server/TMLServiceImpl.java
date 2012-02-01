@@ -30,6 +30,7 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 
 
 
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.buildobjects.process.ExternalProcessFailureException;
 import org.buildobjects.process.ProcBuilder;
 
@@ -47,45 +48,48 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		String dirPath = "output-"+Thread.currentThread().getId()+"/";
 		File dir=null;
 		if(new File(dirPath).mkdir()){
-		try {
-			
-			File file = new File(dirPath+code.getFileName()+"."+dto.getSuffix());
-			dir = new File(dirPath);
-			bfw = new BufferedWriter(new FileWriter(file));
-			bfw.write(code.getCode());
-			bfw.flush();
-			
-			if (bfw !=null) {
-				bfw.close();		
-			}
-			
-			if(dto.getCompileCmd()!=null && !dto.getCompileCmd().equals("")){
-				String ccmd = dto.getCompileCmd().replaceAll("<filename>",code.getFileName());
-				ccmd = ccmd.replaceAll("<suffix>", dto.getSuffix());	
-				result+=runCmd(ccmd,dto.getTimeout(),dir);
-				
-				
-				
-			}
-			String rcmd = dto.getRunCmd().replaceAll("<filename>",code.getFileName());
-			rcmd = rcmd.replaceAll("<suffix>", dto.getSuffix());
-			
-			result +=runCmd(rcmd,dto.getTimeout(),dir);
-			
-		} catch (IOException ex) {
-			
-			ex.printStackTrace();
-			throw new Exception(ex.getMessage());
-		} finally{
-			this.deleteDir(dir);
-			
-		}
-		String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
-		regex = regex.replaceAll("<filename>",code.getFileName());
-		regex = regex.replaceAll("<suffix>",dto.getSuffix());
+			try {
+
+				File file = new File(dirPath+code.getFileName()+"."+dto.getSuffix());
+				dir = new File(dirPath);
+				bfw = new BufferedWriter(new FileWriter(file));
+				bfw.write(code.getCode());
+				bfw.flush();
+
+				if (bfw !=null) {
+					bfw.close();		
+				}
+
+				if(dto.getCompileCmd()!=null && !dto.getCompileCmd().equals("")){
+					
+					String ccmd = dto.getCompileCmd().replaceAll("<filename>",code.getFileName());
+					ccmd = ccmd.replaceAll("<suffix>", dto.getSuffix());	
+					result+=runCmd(ccmd,dto.getTimeout(),dir);
 
 
-		return new ConsoleDTO(result,TmlUtil.getErrorMap(result.split("\\n"), regex));
+
+				}
+				String rcmd = dto.getRunCmd().replaceAll("<filename>",code.getFileName());
+				rcmd = rcmd.replaceAll("<suffix>", dto.getSuffix());
+
+				result +=runCmd(rcmd,dto.getTimeout(),dir);
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+				throw new Exception(ex.getMessage());
+			
+			}finally{
+				
+				this.deleteDir(dir);
+
+			}
+			String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
+			regex = regex.replaceAll("<filename>",code.getFileName());
+			regex = regex.replaceAll("<suffix>",dto.getSuffix());
+
+
+			return new ConsoleDTO(result,TmlUtil.getErrorMap(result.split("\\n"), regex));
 		}else
 			throw new Exception("A user directory to place the source and executable file can not be created");
 
