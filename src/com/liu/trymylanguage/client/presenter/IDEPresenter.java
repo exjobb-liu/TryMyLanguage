@@ -2,6 +2,7 @@ package com.liu.trymylanguage.client.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -69,6 +70,8 @@ public class IDEPresenter implements  Presenter {
 		CodeMirror2 getEditor();
 		void showError(String message,String closeButtonText,ClickHandler close);
 		void showError(String messsage);
+		String getSelectedFileName();
+		void setLineFeedBack(Map<Integer,Integer> map);
 		Widget asWidget();
 
 	}
@@ -186,6 +189,7 @@ public class IDEPresenter implements  Presenter {
 	private void run(){
 		CodeDTO codeDTO = new CodeDTO();
 		codeDTO.setCode(display.getSelectedTabValue());
+		codeDTO.setFileName(display.getSelectedFileName());
 		
 		tmlService.compile(codeDTO, new AsyncCallback<ConsoleDTO>(){
 			// Implementation of com.google.gwt.user.client.rpc.AsyncCallback
@@ -197,7 +201,7 @@ public class IDEPresenter implements  Presenter {
 			public void onSuccess(ConsoleDTO consoleDTO) {
 				display.setConsoleData(consoleDTO.getContent());
 
-			
+				display.setLineFeedBack(consoleDTO.getLineFeedback());
 
 			}
 		});

@@ -2,9 +2,14 @@ package com.liu.trymylanguage.client.view;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 
@@ -50,6 +55,8 @@ import com.google.gwt.layout.client.Layout;
 import com.google.gwt.layout.client.Layout.Alignment;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
 /**
  * Describe class IDEView here.
@@ -71,7 +78,7 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	private Button previousButton = new Button();
 	private ListBox chooseLanguageBox = new ListBox();
 	private TextArea tutorialArea = new TextArea();
-	private TextArea consoleArea = new TextArea();
+	private ResizeableTextArea consoleArea = new ResizeableTextArea();
 	private HorizontalPanel toolbarPanel = new HorizontalPanel();
 	private CodeMirror2 editor;
 	private CodeMirrorConf conf;
@@ -79,8 +86,12 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	private ErrorDialog errorDialog = new ErrorDialog();
 	private TabLayoutPanel editorTabPanel = new TabLayoutPanel(2.5, Unit.EM);
 	private TabWidget tabWidget; 
-	
+	private Map<Integer,Integer> feedback;
 	public IDEView(){
+		
+		consoleArea.setReadOnly(true);
+		
+		
 		
 		codeMirrorPanel = new ScrollPanel();
 
@@ -115,7 +126,7 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		
 		
 		
-		tabWidget = new TabWidget("default", new ClickHandler(){
+		tabWidget = new TabWidget(new ClickHandler(){
 				public void onClick(ClickEvent event){
 					editorTabPanel.remove(codeMirrorPanel);
 					
@@ -132,7 +143,8 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		mainPanel.addWest(tutorialArea,150);
 		mainPanel.addNorth(editorTabPanel,384);
 		mainPanel.add(consoleArea);
-
+		
+		
 		// Attach 3 widgets to a DockLayoutPanel
 		// Lay them out in 'em' units.
 		DockLayoutPanel lp = new DockLayoutPanel(Unit.EM);
@@ -140,11 +152,14 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		lp.addSouth(new HTML("Footer"),2);
 		lp.add(mainPanel);
 		initWidget(lp);
+		
 		//Add mainPanel to the HTML element with mainPanel as id
 		//RootLayoutPanel.get().add(lp);
-
+		
 
 	}
+	
+	
 	public void addRunClickHandler(ClickHandler handler){
 		runButton.addClickHandler(handler);
 	}
@@ -156,7 +171,10 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		return consoleArea;
 	}
 	public String getSelectedTabValue(){
-		return editor.getValue();
+		ScrollPanel panel = (ScrollPanel) editorTabPanel
+				.getWidget(editorTabPanel.getSelectedIndex());
+		
+		return ((CodeMirror2)panel.getWidget()).getValue();
 	}
 	public int getSelectedTabTypeId(){
 		return Integer.parseInt(chooseLanguageBox.getValue(chooseLanguageBox.getSelectedIndex()));
@@ -196,5 +214,84 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 		errorDialog.setMessage(error);
 		errorDialog.center();
 	}
+	@Override
+	public String getSelectedFileName() {
+		
+		return editorTabPanel
+				.getTabWidget(editorTabPanel.getSelectedIndex()).toString();
+	}
+	
+	
+	public class ResizeableTextArea extends TextArea implements RequiresResize{
+		
+		private Integer lastSelectedLine;
+		public ResizeableTextArea(){
+			super();
+			
+		}
+		@Override
+		public void setText(String text) {
+			// TODO Auto-generated method stub
+			super.setText(text);
+			onResize();
+		}
+		
+		@Override
+		public void onResize() {
+			int width = ResizeableTextArea.this.getParent().getOffsetWidth();
+			int height = ResizeableTextArea.this.getParent().getOffsetHeight();
+			
+			ResizeableTextArea.this.setPixelSize(width, height);
+			
+		}
+		public int getSelectedLine(){
+			int pos = this.getCursorPos();
+			String content = this.getValue();
+			int ln = 1;
+			for(int i = 0 ; i<pos; i++){
+				if(content.charAt(i)=='\n')
+					ln++;
+			}
+			return ln;
+			
+		}
+		public Integer getLastSelectedLine(){
+			
+			return lastSelectedLine;
+		}
+		
+		public void setLastSelectedLine(Integer ln){
+			lastSelectedLine = ln;
+		}
+		
+	}
+
+
+	@Override
+	public void setLineFeedBack(final Map<Integer, Integer> map) {
+		feedback = map;
+		
+		consoleArea.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if (consoleArea.getLastSelectedLine()!=null){
+					editor.clearMarker(consoleArea.getLastSelectedLine());
+				}
+				Integer ln = (Integer)map.get(consoleArea.getSelectedLine());
+				System.out.println(ln);
+				if(ln!=null){
+					editor.setMarker(ln-1);
+					consoleArea.setLastSelectedLine(ln-1);
+					editor.setCursor(ln-1, 0);
+					editor.focus();
+				}
+			}
+		});
+	
+	}
+	
+	
+	
 	
 }

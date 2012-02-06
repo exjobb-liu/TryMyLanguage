@@ -10,27 +10,28 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 
 public class TabWidget extends Composite {
-	private HTML title;
+	private Label title;
 	private HTML close;
 	private RenameDialog rename;
 	private HorizontalPanel panel;
-	public TabWidget(final String title,ClickHandler closeHandler){
+	public TabWidget(ClickHandler closeHandler){
 		close = new HTML("<span style='margin: 3px; border:1px solid black'>x</span>");
 		
-		this.title= new HTML(title);
+		this.title= new Label("default");
 		close.addClickHandler(closeHandler);
 		
 		this.title.addDoubleClickHandler(new DoubleClickHandler() {
 			
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				rename = new RenameDialog(title);
+				rename = new RenameDialog(title.getText());
 				rename.center();
 				rename.show();
 				
@@ -64,7 +65,7 @@ public class TabWidget extends Composite {
 				
 				@Override
 				public void onClick(ClickEvent event) {
-					TabWidget.this.title.setHTML(nameText.getText());
+					TabWidget.this.title.setText(nameText.getText());
 					hide();
 					
 				}
@@ -84,6 +85,11 @@ public class TabWidget extends Composite {
 			mainPanel.add(buttonPanel);
 			setWidget(mainPanel);
 		}
+		
+		
+	}
+	public String toString(){
+		return title.getText();
 		
 		
 	}
