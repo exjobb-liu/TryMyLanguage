@@ -72,10 +72,11 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 
 	
 	private Button runButton = new Button(" Run ");
-	private Button addLangButton = new Button("+");
+	
 	private Button upButton = new Button();
 	private Button nextButton = new Button();
 	private Button previousButton = new Button();
+	private Button addTab = new Button("New Tab");
 	private ListBox chooseLanguageBox = new ListBox();
 	private TextArea tutorialArea = new TextArea();
 	private ResizeableTextArea consoleArea = new ResizeableTextArea();
@@ -87,52 +88,38 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	private TabLayoutPanel editorTabPanel = new TabLayoutPanel(2.5, Unit.EM);
 	private TabWidget tabWidget; 
 	private Map<Integer,Integer> feedback;
-	public IDEView(){
-		
+	
+	public IDEView(CodeMirrorConf conf){
+		this.conf= conf;
 		consoleArea.setReadOnly(true);
 		
 		
 		
 		codeMirrorPanel = new ScrollPanel();
 
-		conf= new CodeMirrorConf();
-
 		
-		conf.setValue("public class Test{\n"+
-				"	public static void main(String[] argsv){\n"+
-				"		System.out.println(\"test\");\n"+
-				"	}\n"+
-				"}");
-		conf.setMode(new JSONObject());
-		conf.setLineNumbers(true);
 		editor = new CodeMirror2(conf);
 
 		codeMirrorPanel.add(editor);
 
-		//toolbarPanel.add(runButton);
 		
-		/*runButton.addAttachHandler(new Handler(){
-			public void onAttachOrDetach(AttachEvent event){
-				editorPanel.setWidgetTopHeight(toolbarPanel,0,Unit.PX,runButton.getOffsetHeight(),Unit.PX);
-
-				editorPanel.setWidgetTopBottom(codeMirrorPanel,runButton.getOffsetHeight(),Unit.PX,0,Unit.PX);
-				System.out.println(runButton.getOffsetHeight());
-			}
-		});*/
 		
 		
 		//Attach widgets to editorPanel
 		toolbarPanel.add(runButton);
 		
+		addTab.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		toolbarPanel.add(addTab);
 		
 		
-		tabWidget = new TabWidget(new ClickHandler(){
-				public void onClick(ClickEvent event){
-					editorTabPanel.remove(codeMirrorPanel);
-					
-				} 
-		
-		});	
+		tabWidget = new TabWidget(editorTabPanel,false);	
 		editorTabPanel.add(codeMirrorPanel,tabWidget);
 		//	editorPanel.setWidgetVerticalPosition(toolbarPanel,Alignment.BEGIN);
 
@@ -170,7 +157,7 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	public HasKeyPressHandlers getConsole(){
 		return consoleArea;
 	}
-	public String getSelectedTabValue(){
+	public String getSelectedTabValue(){//Attach widgets to editorPanel
 		ScrollPanel panel = (ScrollPanel) editorTabPanel
 				.getWidget(editorTabPanel.getSelectedIndex());
 		
@@ -190,10 +177,8 @@ public class IDEView extends Composite implements IDEPresenter.Display{
 	public Widget asWidget(){
 		return this;
 	}
-	@Override
-	public HasClickHandlers getAddLangButton() {
-		return addLangButton;
-	}
+	
+
 	@Override
 	public ListBox getLangBox() {
 		return chooseLanguageBox;

@@ -105,7 +105,7 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 				} 
 				if (token.equals("ide")){
 					
-					presenter = new IDEPresenter(rpcService,eventBus,new IDEView());
+					presenter = new IDEPresenter(rpcService,eventBus);
 				
 				}
 				if (presenter !=null){

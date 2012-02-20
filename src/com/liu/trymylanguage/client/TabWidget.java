@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -21,11 +22,17 @@ public class TabWidget extends Composite {
 	private HTML close;
 	private RenameDialog rename;
 	private HorizontalPanel panel;
-	public TabWidget(ClickHandler closeHandler){
-		close = new HTML("<span style='margin: 3px; border:1px solid black'>x</span>");
+	private TabLayoutPanel parent;
+	private boolean isCloseable;
+	public TabWidget(final TabLayoutPanel parent, boolean isCloseable){
+		
+		this.parent = parent;
+		this.isCloseable = isCloseable;
+		
+		
 		
 		this.title= new Label("default");
-		close.addClickHandler(closeHandler);
+		
 		
 		this.title.addDoubleClickHandler(new DoubleClickHandler() {
 			
@@ -39,7 +46,20 @@ public class TabWidget extends Composite {
 		});
 		panel = new HorizontalPanel();
 		panel.add(this.title);
-		panel.add(close);
+		
+		if(isCloseable){
+			close = new HTML("<span style='margin: 3px; border:1px solid black'>x</span>");
+			close.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					parent.remove(parent.getSelectedIndex());
+					
+				}
+			});
+			panel.add(close);
+		}
+		
 		initWidget(panel);
 		
 	}

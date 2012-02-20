@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.liu.trymylanguage.client.TMLServiceAsync;
 
 import com.liu.trymylanguage.client.event.AddLangEvent;
+import com.liu.trymylanguage.client.view.IDEView;
 import com.liu.trymylanguage.shared.ConsoleDTO;
 import com.liu.trymylanguage.shared.CodeDTO;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -33,6 +34,7 @@ import com.liu.trymylanguage.shared.FileTypeDTO;
 import com.liu.trymylanguage.shared.LangParamDTO;
 
 import se.liu.gwt.widgets.client.CodeMirror2;
+import se.liu.gwt.widgets.client.CodeMirrorConf;
 
 /**
  * Describe class IDEPresenter here.
@@ -60,7 +62,7 @@ public class IDEPresenter implements  Presenter {
 
 	public interface Display{
 		void addRunClickHandler(ClickHandler handler);
-		HasClickHandlers getAddLangButton();
+		
 		void setConsoleData(String data);
 		HasKeyPressHandlers getConsole();
 		String getSelectedTabValue();
@@ -78,17 +80,24 @@ public class IDEPresenter implements  Presenter {
 
 	private final TMLServiceAsync tmlService;
 	private final HasHandlers eventBus;
-	private final Display display;
+	private Display display;
 
-	public IDEPresenter(TMLServiceAsync tmlService,final HasHandlers eventBus, Display view) {
+	public IDEPresenter(TMLServiceAsync tmlService,final HasHandlers eventBus) {
 		this.tmlService = tmlService;
 		this.eventBus = eventBus;
-		this.display = view;
+		
 		
 		tmlService.getLangParam(new AsyncCallback<LangParamDTO>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				CodeMirrorConf conf= new CodeMirrorConf();
+
+				
+				
+				conf.setMode(new JSONObject());
+				conf.setLineNumbers(true);
+				display = new IDEView(conf);	
 				display.showError(caught.getMessage(),"Click here to define a language",new ClickHandler(){
 					public void onClick(ClickEvent event){
 						eventBus.fireEvent(new AddLangEvent());	
@@ -121,6 +130,18 @@ public class IDEPresenter implements  Presenter {
 				mode.put("commentMEnd",new JSONString(result.getCommentMEnd()));
 				mode.put("escapeCh",new JSONString(result.getEscapeChar()));
 				mode.put("isOperatorChar",new JSONString("/"+result.getOperators()+"/"));
+				
+				CodeMirrorConf conf= new CodeMirrorConf();
+
+				
+				conf.setValue("public class Test{\n"+
+						"	public static void main(String[] argsv){\n"+
+						"		System.out.println(\"test\");\n"+
+						"	}\n"+
+						"}");
+				conf.setMode(mode);
+				conf.setLineNumbers(true);
+				display = new IDEView(conf);
 				display.getEditor().setMode(mode);	
 			}
 		});
@@ -137,12 +158,7 @@ public class IDEPresenter implements  Presenter {
 
 			}
 		});
-		display.getAddLangButton().addClickHandler(new ClickHandler(){
-
-			public void onClick(ClickEvent event){
-				eventBus.fireEvent(new AddLangEvent());
-			}
-		});
+		
 		
 		/*display.getLangBox().addChangeHandler(new ChangeHandler(){
 
@@ -176,9 +192,12 @@ public class IDEPresenter implements  Presenter {
 	 * @param hasWidgets a <code>HasWidgets</code> value
 	 */
 	public final void go(final HasWidgets container) {
-		bind();
-		container.clear();
-		container.add(display.asWidget());
+		if(display!=null){
+			bind();
+			container.clear();
+			container.add(display.asWidget());
+		}
+		
 	}
 
 
