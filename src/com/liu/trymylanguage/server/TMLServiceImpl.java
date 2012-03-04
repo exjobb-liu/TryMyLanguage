@@ -190,6 +190,13 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	    // The directory is now empty so delete it
 	    return dir.delete();
 	}
+
+
+	@Override
+	public boolean isConfigured() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }

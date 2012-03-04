@@ -4,6 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -14,18 +16,20 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 
 public class TabWidget extends Composite {
 	private Label title;
-	private HTML close;
+	private Button close;
 	private RenameDialog rename;
 	private HorizontalPanel panel;
 	private TabLayoutPanel parent;
 	private boolean isCloseable;
-	public TabWidget(final TabLayoutPanel parent, boolean isCloseable){
-		
+	private Widget widget;
+	public TabWidget(final TabLayoutPanel parent, boolean isCloseable, Widget widget){
+		this.widget = widget;
 		this.parent = parent;
 		this.isCloseable = isCloseable;
 		
@@ -45,20 +49,12 @@ public class TabWidget extends Composite {
 			}
 		});
 		panel = new HorizontalPanel();
+	
 		panel.add(this.title);
 		
-		if(isCloseable){
-			close = new HTML("<span style='margin: 3px; border:1px solid black'>x</span>");
-			close.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					parent.remove(parent.getSelectedIndex());
-					
-				}
-			});
-			panel.add(close);
-		}
+		setIsCloseable(isCloseable);
+		
+		
 		
 		initWidget(panel);
 		
@@ -113,4 +109,48 @@ public class TabWidget extends Composite {
 		
 		
 	}
+	
+	public void setIsCloseable(boolean isCloseable){
+		
+		this.isCloseable = isCloseable;
+		if(isCloseable){
+			
+			if(close == null){
+				close = new Button("x");
+				
+			}
+			close.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					
+					//int index = parent.getSelectedIndex();
+					int index = parent.getWidgetIndex(widget);
+					try {
+						parent.selectTab(index+1);
+					} catch (AssertionError e) {
+						parent.selectTab(index-1);
+					}
+					
+					parent.remove(widget);
+					 
+				//	System.out.println(parent.getWidgetCount());
+				//	parent.selectTab(parent.getWidgetCount()-1);
+					if(parent.getWidgetCount()==1){
+						((TabWidget)parent.getTabWidget(0)).setIsCloseable(false);
+						
+					}
+				}
+			});
+			
+			panel.add(close);
+			
+		}else if(close!=null)
+			panel.remove(close);
+		
+		
+	}
+	
+	
+	
 }

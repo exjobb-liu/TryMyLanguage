@@ -18,4 +18,5 @@ public interface TMLService extends RemoteService {
     
     void saveLang(LangParamDTO dto);
     LangParamDTO getLangParam() throws Exception; 
+    boolean isConfigured();
 }

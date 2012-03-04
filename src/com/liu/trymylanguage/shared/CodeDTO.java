@@ -11,6 +11,7 @@ package com.liu.trymylanguage.shared;
  */
 public class CodeDTO implements java.io.Serializable {
   
+	
     /**
      * Describe fileName here.
      */
@@ -30,7 +31,7 @@ public class CodeDTO implements java.io.Serializable {
      *
      * @return a <code>String</code> value
      */
-    public final String getCode() {
+    public  String getCode() {
 	return code;
     }
 
@@ -39,7 +40,7 @@ public class CodeDTO implements java.io.Serializable {
      *
      * @param newCode The new Code value.
      */
-    public final void setCode(final String newCode) {
+    public  void setCode(final String newCode) {
 	this.code = newCode;
     }
 
@@ -48,7 +49,7 @@ public class CodeDTO implements java.io.Serializable {
      *
      * @return a <code>String</code> value
      */
-    public final String getFileName() {
+    public  String getFileName() {
 	return fileName;
     }
 
@@ -57,7 +58,7 @@ public class CodeDTO implements java.io.Serializable {
      *
      * @param newFileName The new FileName value.
      */
-    public final void setFileName(final String newFileName) {
+    public  void setFileName(final String newFileName) {
 	this.fileName = newFileName;
     }
 }

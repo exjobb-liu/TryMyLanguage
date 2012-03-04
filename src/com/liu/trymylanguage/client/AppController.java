@@ -18,7 +18,7 @@ import com.liu.trymylanguage.client.presenter.NewLangPresenter;
 import com.liu.trymylanguage.client.presenter.Presenter;
 import com.liu.trymylanguage.client.presenter.IDEPresenter;
 
-import com.liu.trymylanguage.client.view.IDEView;
+import com.liu.trymylanguage.client.view.IDEViewPre;
 import com.liu.trymylanguage.client.view.NewLangUi;
 
 import com.liu.trymylanguage.shared.LangParamDTO;

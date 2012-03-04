@@ -1,282 +1,182 @@
 package com.liu.trymylanguage.client.view;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import se.liu.gwt.widgets.client.CodeMirror2;
+import se.liu.gwt.widgets.client.CodeMirrorConf;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Event;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-
 import com.google.gwt.event.logical.shared.AttachEvent;
-
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TabPanel;
-
-import com.liu.trymylanguage.client.ErrorDialog;
-import com.liu.trymylanguage.client.TabWidget;
-
-import com.liu.trymylanguage.client.event.AddLangEvent;
-import com.liu.trymylanguage.client.presenter.IDEPresenter;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.ProvidesResize;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.liu.trymylanguage.client.ErrorDialog;
+import com.liu.trymylanguage.client.TMLService;
+import com.liu.trymylanguage.client.TMLServiceAsync;
+import com.liu.trymylanguage.client.TabWidget;
+import com.liu.trymylanguage.shared.CodeDTO;
+import com.liu.trymylanguage.shared.LangParamDTO;
 
-import com.liu.trymylanguage.shared.FileTypeDTO;
-import se.liu.gwt.widgets.client.CodeMirrorConf;
-import se.liu.gwt.widgets.client.CodeMirror2;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.layout.client.Layout;
-import com.google.gwt.layout.client.Layout.Alignment;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.GwtEvent.Type;
-
-/**
- * Describe class IDEView here.
- *
- *
- * Created: Fri Dec  2 15:19:53 2011
- *
- * @author <a href="mailto:amir@amir-laptop">Amir Hossein Fouladi</a>
- * @version 1.0
- */
-public class IDEView extends Composite implements IDEPresenter.Display{
-	private SplitLayoutPanel mainPanel = new SplitLayoutPanel();
+public class IDEView extends Composite {
 
 	
-	private Button runButton = new Button(" Run ");
 	
-	private Button upButton = new Button();
-	private Button nextButton = new Button();
-	private Button previousButton = new Button();
-	private Button addTab = new Button("New Tab");
-	private ListBox chooseLanguageBox = new ListBox();
-	private TextArea tutorialArea = new TextArea();
-	private ResizeableTextArea consoleArea = new ResizeableTextArea();
-	private HorizontalPanel toolbarPanel = new HorizontalPanel();
-	private CodeMirror2 editor;
+	@UiField Button runButton;
+	@UiField Button newTabButton;
+	@UiField TabLayoutPanel tabPanel;
+	
+	
+	private static IDEViewUiBinder uiBinder = GWT.create(IDEViewUiBinder.class);
+	private TMLServiceAsync service;
 	private CodeMirrorConf conf;
-	private ScrollPanel codeMirrorPanel;
-	private ErrorDialog errorDialog = new ErrorDialog();
-	private TabLayoutPanel editorTabPanel = new TabLayoutPanel(2.5, Unit.EM);
-	private TabWidget tabWidget; 
-	private Map<Integer,Integer> feedback;
 	
-	public IDEView(CodeMirrorConf conf){
-		this.conf= conf;
-		consoleArea.setReadOnly(true);
-		
-		
-		
-		codeMirrorPanel = new ScrollPanel();
+	interface IDEViewUiBinder extends UiBinder<Widget, IDEView> {
+	}
 
+	public IDEView() {
+		service = GWT.create(TMLService.class);
 		
-		editor = new CodeMirror2(conf);
+		service.getLangParam(new AsyncCallback<LangParamDTO>() {
 
-		codeMirrorPanel.add(editor);
-
-		
-		
-		
-		//Attach widgets to editorPanel
-		toolbarPanel.add(runButton);
-		
-		addTab.addClickHandler(new ClickHandler() {
-			
 			@Override
-			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
+			public void onFailure(Throwable caught) {
+				ErrorDialog dialog = new ErrorDialog();
+				dialog.setMessage(caught.getMessage());
+				dialog.center();
+				dialog.show();
+			}
+
+			@Override
+			public void onSuccess(LangParamDTO result) {
+				
+				if(result!=null){
+					conf = getConf(result);
+					ScrollPanel w = new ScrollPanel(new CodeMirror2(conf));
+					tabPanel.add(w,
+							new TabWidget(tabPanel,false,w));
+					
+				}else
+					showAddLangErrorDialog();
+				
 				
 			}
 		});
-		toolbarPanel.add(addTab);
 		
 		
-		tabWidget = new TabWidget(editorTabPanel,false);	
-		editorTabPanel.add(codeMirrorPanel,tabWidget);
-		//	editorPanel.setWidgetVerticalPosition(toolbarPanel,Alignment.BEGIN);
+		
+		
+		
+		
+		
+		
+		initWidget(uiBinder.createAndBindUi(this));
+	}
 
-		//	editorPanel.setWidgetVerticalPosition(codeMirrorPanel,Alignment.END);
-
-
-		//Adding widgets to panel areas
-		mainPanel.addWest(tutorialArea,150);
-		mainPanel.addNorth(editorTabPanel,384);
-		mainPanel.add(consoleArea);
+	
+	
+	//************ UI Handlers ******************//
+	
+	@UiHandler("runButton")
+	void handleRunClick(ClickEvent e){
+		int selected  = tabPanel.getSelectedIndex();
+		ScrollPanel sp = (ScrollPanel)tabPanel.getWidget(selected);
+		CodeMirror2 cm = (CodeMirror2)sp.getWidget();
 		
 		
-		// Attach 3 widgets to a DockLayoutPanel
-		// Lay them out in 'em' units.
-		DockLayoutPanel lp = new DockLayoutPanel(Unit.EM);
-		lp.addNorth(toolbarPanel,3);
-		lp.addSouth(new HTML("Footer"),2);
-		lp.add(mainPanel);
-		initWidget(lp);
-		
-		//Add mainPanel to the HTML element with mainPanel as id
-		//RootLayoutPanel.get().add(lp);
-		
-
+		//service.compile(new CodeDTO(,cm.getValue()), callback)
+	}
+	
+	@UiHandler("newTabButton")
+	void handleAddTabClick(ClickEvent e){
+		ScrollPanel w = new ScrollPanel(new CodeMirror2(conf));
+		tabPanel.add(w,
+				new TabWidget(tabPanel, true,w));
+		tabPanel.selectTab(w);
+		if(tabPanel.getWidgetCount()==2){
+			((TabWidget)tabPanel.getTabWidget(0)).setIsCloseable(true);
+			
+		}
 	}
 	
 	
-	public void addRunClickHandler(ClickHandler handler){
-		runButton.addClickHandler(handler);
-	}
-	public void setConsoleData(String data){
-
-		consoleArea.setText(data);
-	}
-	public HasKeyPressHandlers getConsole(){
-		return consoleArea;
-	}
-	public String getSelectedTabValue(){//Attach widgets to editorPanel
-		ScrollPanel panel = (ScrollPanel) editorTabPanel
-				.getWidget(editorTabPanel.getSelectedIndex());
+	
+	//************ UI Handlers ******************//
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private CodeMirrorConf getConf(LangParamDTO dto){
 		
-		return ((CodeMirror2)panel.getWidget()).getValue();
-	}
-	public int getSelectedTabTypeId(){
-		return Integer.parseInt(chooseLanguageBox.getValue(chooseLanguageBox.getSelectedIndex()));
-	}
-	public void setSupportedTypes(Collection<FileTypeDTO> c){
-		Iterator<FileTypeDTO> it = c.iterator(); 
-		while(it.hasNext()){
-			FileTypeDTO type = it.next();
-			chooseLanguageBox.addItem(type.getName(),type.getId()); 
+		String[] keywords = dto.getKeywords().split("\\s");
+		JSONArray array = new JSONArray();
+		for (int i=0;i<keywords.length ;i++ ){
+			array.set(i,new JSONString(keywords[i]));
 
 		} 
-	} 
-	public Widget asWidget(){
-		return this;
+		String[] stringChar = dto.getStringChar().trim().split("\\s");
+		JSONArray sarray = new JSONArray();
+		for (int i=0;i<stringChar.length ;i++ ){
+			sarray.set(i,new JSONString(stringChar[i]));
+
+		} 
+		
+		JSONObject mode = new JSONObject();
+		mode.put("name",new JSONString("basemode"));
+		mode.put("keywords",array);
+		mode.put("stringCh",sarray);
+		mode.put("commentSingle",new JSONString(dto.getCommentSingle()));
+		mode.put("commentMStart",new JSONString(dto.getCommentMStart()));
+		mode.put("commentMEnd",new JSONString(dto.getCommentMEnd()));
+		mode.put("escapeCh",new JSONString(dto.getEscapeChar()));
+		mode.put("isOperatorChar",new JSONString("/"+dto.getOperators()+"/"));
+		
+		CodeMirrorConf conf= new CodeMirrorConf();
+
+		
+		
+		conf.setMode(mode);
+		conf.setLineNumbers(true);
+		
+		
+		return conf;
+		
+		
 	}
 	
-
-	@Override
-	public ListBox getLangBox() {
-		return chooseLanguageBox;
-	}
-	@Override
-	public CodeMirror2 getEditor() {
-		return editor;
-	}
-	@Override
-	public void showError(String error, String closeText, ClickHandler closeHandler) {
-		errorDialog.setMessage(error);
+	private void showAddLangErrorDialog(){
+		
+		
+		ErrorDialog errorDialog = new ErrorDialog();
+		errorDialog.setMessage("No Language is Configured");
 		errorDialog.center();
-		errorDialog.setCloseButtonText(closeText);
-		errorDialog.addCloseButtonClickHandler(closeHandler);		
-		errorDialog.show();
-	}
-	public void showError(String error){
-		errorDialog.setMessage(error);
-		errorDialog.center();
-	}
-	@Override
-	public String getSelectedFileName() {
-		
-		return editorTabPanel
-				.getTabWidget(editorTabPanel.getSelectedIndex()).toString();
-	}
-	
-	
-	public class ResizeableTextArea extends TextArea implements RequiresResize{
-		
-		private Integer lastSelectedLine;
-		public ResizeableTextArea(){
-			super();
-			
-		}
-		@Override
-		public void setText(String text) {
-			// TODO Auto-generated method stub
-			super.setText(text);
-			onResize();
-		}
-		
-		@Override
-		public void onResize() {
-			int width = ResizeableTextArea.this.getParent().getOffsetWidth();
-			int height = ResizeableTextArea.this.getParent().getOffsetHeight();
-			
-			ResizeableTextArea.this.setPixelSize(width, height);
-			
-		}
-		public int getSelectedLine(){
-			int pos = this.getCursorPos();
-			String content = this.getValue();
-			int ln = 1;
-			for(int i = 0 ; i<pos; i++){
-				if(content.charAt(i)=='\n')
-					ln++;
-			}
-			return ln;
-			
-		}
-		public Integer getLastSelectedLine(){
-			
-			return lastSelectedLine;
-		}
-		
-		public void setLastSelectedLine(Integer ln){
-			lastSelectedLine = ln;
-		}
-		
-	}
-
-
-	@Override
-	public void setLineFeedBack(final Map<Integer, Integer> map) {
-		feedback = map;
-		
-		consoleArea.addClickHandler(new ClickHandler() {
+		errorDialog.setCloseButtonText("Click here to configure a language");
+		errorDialog.addCloseButtonClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				if (consoleArea.getLastSelectedLine()!=null){
-					editor.clearMarker(consoleArea.getLastSelectedLine());
-				}
-				Integer ln = (Integer)map.get(consoleArea.getSelectedLine());
-				System.out.println(ln);
-				if(ln!=null){
-					editor.setMarker(ln-1);
-					consoleArea.setLastSelectedLine(ln-1);
-					editor.setCursor(ln-1, 0);
-					editor.focus();
-				}
+				History.newItem("addLang");
+				
 			}
-		});
-	
+		});		
+		errorDialog.show();
 	}
-	
-	
-	
-	
 }

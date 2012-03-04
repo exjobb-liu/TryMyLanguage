@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.liu.trymylanguage.client.TMLServiceAsync;
 
 import com.liu.trymylanguage.client.event.AddLangEvent;
-import com.liu.trymylanguage.client.view.IDEView;
+import com.liu.trymylanguage.client.view.IDEViewPre;
 import com.liu.trymylanguage.shared.ConsoleDTO;
 import com.liu.trymylanguage.shared.CodeDTO;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -97,7 +97,7 @@ public class IDEPresenter implements  Presenter {
 				
 				conf.setMode(new JSONObject());
 				conf.setLineNumbers(true);
-				display = new IDEView(conf);	
+				display = new IDEViewPre();	
 				display.showError(caught.getMessage(),"Click here to define a language",new ClickHandler(){
 					public void onClick(ClickEvent event){
 						eventBus.fireEvent(new AddLangEvent());	
@@ -141,7 +141,7 @@ public class IDEPresenter implements  Presenter {
 						"}");
 				conf.setMode(mode);
 				conf.setLineNumbers(true);
-				display = new IDEView(conf);
+				display = new IDEViewPre();
 				display.getEditor().setMode(mode);	
 			}
 		});

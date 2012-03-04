@@ -13,4 +13,5 @@ public interface TMLServiceAsync {
     void compile(CodeDTO code, AsyncCallback<ConsoleDTO> callback);
     void saveLang(LangParamDTO dto, AsyncCallback<Void> callback);
 	void getLangParam(AsyncCallback<LangParamDTO> callback);
+	void isConfigured(AsyncCallback<Boolean> callback);
 }
