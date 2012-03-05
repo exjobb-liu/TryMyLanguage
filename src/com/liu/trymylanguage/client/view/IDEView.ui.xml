@@ -9,12 +9,40 @@
 				gwt-image: 'bgImage';
 				
 				
+				font-family: Arial, sans-serif;
 				
 				font-size: 11pt;
 				color: #323232;
 				line-height: 1.75em;
 				width:100%;
 				height: 100%;
+		}
+		
+		.content{
+			background: #FFFFFF;
+			margin: 10px 20px 5px 5px;
+			color: #6E6E6E;
+			padding: 150px 35px 0 35px;
+			
+			border-bottom: solid 2px #BBC1BF;
+		}
+		.sidebar {
+			background: #FFFFFF;
+			
+
+			color: #6E6E6E;
+			padding: 0px 25px;
+			margin: 10px 5px 10px 20px;
+			border-bottom: solid 2px #BBC1BF;
+		}
+		.console {
+			background: #FFFFFF;
+			
+
+			color: #6E6E6E;
+			padding: 0px 25px;
+			margin: 5px 20px 10px 5px;
+			border-bottom: solid 2px #BBC1BF;
 		}
 	</ui:style>
 	<g:DockLayoutPanel styleName="{style.background}">
@@ -30,12 +58,14 @@
 		<g:center>
 			<g:SplitLayoutPanel>
 				<g:west size="300">
-					<g:HTMLPanel ui:field="tutorialArea"></g:HTMLPanel>
+					<g:HTMLPanel ui:field="tutorialArea" styleName="{style.sidebar}">
+						<h1>Welcome</h1>
+					</g:HTMLPanel>
 					
 				</g:west>
 				<g:north size="500">
 					
-					<g:TabLayoutPanel ui:field="tabPanel" barHeight="20">
+					<g:TabLayoutPanel ui:field="tabPanel" barHeight="20" styleName="{style.content}">
 						
 					</g:TabLayoutPanel>
 				
@@ -43,7 +73,7 @@
 				</g:north>
 				<g:center>
 					
-					<g:HTMLPanel ui:field="consoleArea">
+					<g:HTMLPanel ui:field="consoleArea" styleName="{style.console}">
 						
 					
 					</g:HTMLPanel>

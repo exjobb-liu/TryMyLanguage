@@ -123,7 +123,7 @@ public class TabWidget extends Composite {
 				
 				@Override
 				public void onClick(ClickEvent event) {
-					
+				
 					//int index = parent.getSelectedIndex();
 					int index = parent.getWidgetIndex(widget);
 					try {

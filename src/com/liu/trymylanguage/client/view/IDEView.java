@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -36,6 +38,7 @@ public class IDEView extends Composite {
 	@UiField Button runButton;
 	@UiField Button newTabButton;
 	@UiField TabLayoutPanel tabPanel;
+	@UiField HTMLPanel tutorialArea;
 	
 	
 	private static IDEViewUiBinder uiBinder = GWT.create(IDEViewUiBinder.class);
@@ -63,7 +66,11 @@ public class IDEView extends Composite {
 				
 				if(result!=null){
 					conf = getConf(result);
-					ScrollPanel w = new ScrollPanel(new CodeMirror2(conf));
+					CodeMirror2 c = new CodeMirror2(conf);
+					
+					ScrollPanel w = new ScrollPanel(c);
+					
+					
 					tabPanel.add(w,
 							new TabWidget(tabPanel,false,w));
 					

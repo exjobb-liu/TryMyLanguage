@@ -269,7 +269,7 @@ public class IDEViewPre extends Composite implements IDEPresenter.Display{
 					editor.setMarker(ln-1);
 					consoleArea.setLastSelectedLine(ln-1);
 					editor.setCursor(ln-1, 0);
-					editor.focus();
+					//editor.focus();
 				}
 			}
 		});
