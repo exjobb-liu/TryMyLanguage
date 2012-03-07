@@ -49,8 +49,9 @@ public class TabWidget extends Composite {
 			}
 		});
 		panel = new HorizontalPanel();
-	
+		
 		panel.add(this.title);
+		
 		
 		setIsCloseable(isCloseable);
 		

@@ -18,20 +18,13 @@
 				height: 100%;
 		}
 		
-		.content{
-			background: #FFFFFF;
-			margin: 10px 20px 5px 5px;
-			color: #6E6E6E;
-			padding: 150px 35px 0 35px;
-			
-			border-bottom: solid 2px #BBC1BF;
-		}
+		
 		.sidebar {
 			background: #FFFFFF;
 			
 
 			color: #6E6E6E;
-			padding: 0px 25px;
+			padding: 25px;
 			margin: 10px 5px 10px 20px;
 			border-bottom: solid 2px #BBC1BF;
 		}
@@ -44,6 +37,8 @@
 			margin: 5px 20px 10px 5px;
 			border-bottom: solid 2px #BBC1BF;
 		}
+		
+		
 	</ui:style>
 	<g:DockLayoutPanel styleName="{style.background}">
 		<g:north size="30">
@@ -65,7 +60,7 @@
 				</g:west>
 				<g:north size="500">
 					
-					<g:TabLayoutPanel ui:field="tabPanel" barHeight="20" styleName="{style.content}">
+					<g:TabLayoutPanel ui:field="tabPanel" barHeight="25"  >
 						
 					</g:TabLayoutPanel>
 				

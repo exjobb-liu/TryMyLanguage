@@ -1,34 +1,85 @@
-/** Add css rules here for your application. */
 
-
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+* {
+	margin: 0;
+	padding: 0;
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+a {
+	text-decoration: underline;
+	color: #6B2E42;
 }
 
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+a:hover {
+	text-decoration: none;
 }
 
-.dialogVPanel {
-  margin: 5px;
+
+h1,h2,h3,h4 {
+	letter-spacing: -1px;
+	
+	font-weight: normal;
 }
 
-.serverResponseLabelError {
-  color: red;
+h2 {
+	font-size: 2.25em;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+h2,h3,h4 {
+	color: #000405;
+	font-family: Arvo, serif;
+	margin-bottom: 1em;
 }
+
+h3 {
+	font-size: 1.75em;
+}
+
+h4 {
+	font-size: 1.5em;
+}
+
+a {
+	text-decoration: underline;
+	color: #6B2E42;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+
+.gwt-TabLayoutPanel {
+			background: #FFFFFF;
+			margin: 10px 20px 5px 5px;
+			color: #6E6E6E;
+			
+			
+			border-bottom: solid 2px #BBC1BF;
+		}
+		
+		
+		 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs{
+			
+				background: #C9CFCD url(image/img01.gif);
+				margin: 0px;
+				top: 0px;
+				bottom: 0px;
+		
+	
+		}
+		
+		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab{
+			
+				
+				margin: 0px 5px;
+				
+		
+	
+		}
+		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabInner{
+			background-image: url(image/img02.gif);
+			padding: 0px 5px;
+			color: white;
+		}
+		
+
