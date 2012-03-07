@@ -54,13 +54,33 @@
 			<g:SplitLayoutPanel>
 				<g:west size="300">
 					<g:HTMLPanel ui:field="tutorialArea" styleName="{style.sidebar}">
-						<h1>Welcome</h1>
+						<html>
+							<head>
+								
+							
+							</head>
+							<body>	
+							
+								<div>
+									<p id="code">import java.io;<br /> public class &nbsp;&nbsp;&nbsp;&nbsp;Test(){
+										<br />&nbsp;public static void main(argsv[]){<br />&nbsp;&nbsp;System.out.println("hello\n");<br />
+																					
+										&nbsp;}<br />
+																				
+										}<br />
+									
+								</p>
+									<button onclick="f()">>></button>
+								
+								</div>			
+							</body>
+						</html>
 					</g:HTMLPanel>
 					
 				</g:west>
 				<g:north size="500">
 					
-					<g:TabLayoutPanel ui:field="tabPanel" barHeight="25"  >
+					<g:TabLayoutPanel ui:field="tabPanel" barHeight="31"  >
 						
 					</g:TabLayoutPanel>
 				

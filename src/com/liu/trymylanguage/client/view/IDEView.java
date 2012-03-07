@@ -85,7 +85,7 @@ public class IDEView extends Composite {
 		
 		
 		
-		
+		exportCopyCode();
 		
 		
 		initWidget(uiBinder.createAndBindUi(this));
@@ -186,4 +186,25 @@ public class IDEView extends Composite {
 		});		
 		errorDialog.show();
 	}
+	
+	
+	public void copyCode(String code){
+		code = code.replace("<br>", "\n");
+		code = code.replace("<br />", "\n");
+		code = code.replace("&nbsp;", " ");
+		ScrollPanel p = (ScrollPanel)tabPanel.getWidget(tabPanel.getSelectedIndex());
+		CodeMirror2 m = (CodeMirror2)p.getWidget();
+		
+		m.setValue(code);
+		
+	}
+	
+	private native void exportCopyCode()/*-{
+		var that = this;
+		$wnd.copyCode = 
+			$entry(function(code){
+				that.@com.liu.trymylanguage.client.view.IDEView::copyCode(Ljava/lang/String;)(code)
+			});
+			
+	}-*/;
 }

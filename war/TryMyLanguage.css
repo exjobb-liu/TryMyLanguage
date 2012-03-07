@@ -61,23 +61,27 @@ a:hover {
 		 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs{
 			
 				background: #C9CFCD url(image/img01.gif);
-				margin: 0px;
 				top: 0px;
-				bottom: 0px;
-		
+				
+				border-bottom: solid 5px #993366;
 	
 		}
 		
 		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab{
 			
-				
+				background-color: #CC6699;
 				margin: 0px 5px;
-				
+				padding: 0px 5px;
 		
 	
 		}
 		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabInner{
-			background-image: url(image/img02.gif);
+			
+			
+			color: white;
+		}
+		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected{
+			background-color: #993366;
 			padding: 0px 5px;
 			color: white;
 		}
