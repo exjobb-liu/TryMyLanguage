@@ -1,2 +1,0 @@
-serviceClass: com.liu.trymylanguage.client.TMLService
-path: C216D62B17F3DA58C78A255749DEBDD7.gwt.rpc

@@ -38,15 +38,20 @@ h4 {
 	font-size: 1.5em;
 }
 
-a {
-	text-decoration: underline;
-	color: #6B2E42;
+body {
+	background: #C9CFCD url(image/img01.gif);
+	font-size: 11pt;
+	color: #323232;
+	line-height: 1.75em;
 }
 
-a:hover {
-	text-decoration: none;
+body,input {
+	font-family: Arial, sans-serif;
 }
 
+strong {
+	color: #222222;
+}	
 
 .gwt-TabLayoutPanel {
 			background: #FFFFFF;
@@ -85,5 +90,51 @@ a:hover {
 			padding: 0px 5px;
 			color: white;
 		}
+		.gwt-DialogBox { 
+
+			border: 1px solid black;
+			padding: 5px;
+			background-color: white;
+		}
+.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger:hover {
+
+	cursor:col-resize;
+}
+.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger:hover { 
+	
+	cursor:row-resize;
+} 
+
+.consoleTextArea {
+			background: #FFFFFF;
+			height:100%;
+			width: 100%;
+			
+			color: #6E6E6E;
+			resize: none;
+			
+		}
+		
+		
+		.tutorialArea {
+			background: #FFFFFF;
+			height:100%;
+			width: 100%;
+			
+			color: #6E6E6E;
+		
+			
+		}
 		
 
+.bgMarkedLine{
+	background: #CC6699 !important;
+	
+}
+.gwt-PopupPanelGlass{
+  background-color: #000;
+  opacity: 0.3;
+  filter: literal("alpha(opacity=30)");
+
+
+}

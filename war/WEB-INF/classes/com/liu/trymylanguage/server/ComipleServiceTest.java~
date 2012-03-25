@@ -1,9 +1,0 @@
-package com.liu.trymylanguage.server;
-
-import org.junit.* ;
-import static org.junit.Assert.* ;
-
-public class CompileServiceTest {
-    
-    @Test
-    public void test

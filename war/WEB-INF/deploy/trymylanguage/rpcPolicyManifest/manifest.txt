@@ -1,2 +1,3 @@
 # Module trymylanguage
 # RPC service class, partial path of RPC policy file
+com.liu.trymylanguage.client.TMLService, 5468D923C1B5B1FAD2CC22D8E9C3AD2B.gwt.rpc

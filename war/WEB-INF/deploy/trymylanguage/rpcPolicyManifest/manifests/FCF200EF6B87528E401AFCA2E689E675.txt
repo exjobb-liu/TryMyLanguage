@@ -1,2 +1,0 @@
-serviceClass: com.liu.trymylanguage.client.GreetingService
-path: 20977E7621E840531E35299D7BCC55A4.gwt.rpc

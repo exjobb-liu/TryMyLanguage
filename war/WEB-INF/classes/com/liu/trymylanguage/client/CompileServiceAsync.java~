@@ -1,9 +1,0 @@
-package com.liu.trymylanguage.client;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-public interface CompileServiceAsync {
-
-    void compile(String code, AsyncCallback<Process> callback);
-
-}
