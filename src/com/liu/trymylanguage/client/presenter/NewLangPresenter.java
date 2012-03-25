@@ -5,17 +5,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 import com.google.gwt.event.shared.EventBus;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.liu.trymylanguage.client.TMLServiceAsync;
-import com.liu.trymylanguage.client.event.SaveLangEvent;
-
 import com.liu.trymylanguage.shared.LangParamDTO;
 
  public class NewLangPresenter implements Presenter {
@@ -38,15 +31,8 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 	
 	}
 	private final Display display;
-	private final EventBus eventBus;
-	private final TMLServiceAsync rpcService;
-	
-	
-
 	public NewLangPresenter(EventBus eventBus, Display view, TMLServiceAsync tmlService){
-		this.eventBus = eventBus;
 		display = view;
-		rpcService = tmlService;
 	
 	}
 	@Override
@@ -117,21 +103,21 @@ langDTO.setCommentSingle(display.getCommentSingle()
 		dto.setTimeout(Long.parseLong(display.getTimeout().trim()));
 		dto.setSuffix(display.getSuffix().trim());
 		
-		rpcService.saveLang(dto, new AsyncCallback<Void>() {
-			
-			@Override
-			public void onSuccess(Void result) {
-				eventBus.fireEvent(new SaveLangEvent(dto));
-				
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
-			}
-		});	
-		
+//		rpcService.saveLang(dto, new AsyncCallback<Void>() {
+//			
+//			@Override
+//			public void onSuccess(Void result) {
+//				eventBus.fireEvent(new SaveLangEvent(dto));
+//				
+//			}
+//			
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});	
+//		
 		
 
 

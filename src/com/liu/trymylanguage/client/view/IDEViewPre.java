@@ -3,45 +3,23 @@ package com.liu.trymylanguage.client.view;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-
-import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-
-import com.google.gwt.event.logical.shared.AttachEvent;
-
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TabPanel;
-
 import com.liu.trymylanguage.client.ErrorDialog;
 import com.liu.trymylanguage.client.TabWidget;
 
-import com.liu.trymylanguage.client.event.AddLangEvent;
 import com.liu.trymylanguage.client.presenter.IDEPresenter;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 import com.liu.trymylanguage.shared.FileTypeDTO;
@@ -49,14 +27,6 @@ import se.liu.gwt.widgets.client.CodeMirrorConf;
 import se.liu.gwt.widgets.client.CodeMirror2;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.layout.client.Layout;
-import com.google.gwt.layout.client.Layout.Alignment;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 /**
  * Describe class IDEView here.
@@ -73,9 +43,7 @@ public class IDEViewPre extends Composite implements IDEPresenter.Display{
 	
 	private Button runButton = new Button(" Run ");
 	
-	private Button upButton = new Button();
-	private Button nextButton = new Button();
-	private Button previousButton = new Button();
+	
 	private Button addTab = new Button("New Tab");
 	private ListBox chooseLanguageBox = new ListBox();
 	private TextArea tutorialArea = new TextArea();
@@ -84,11 +52,9 @@ public class IDEViewPre extends Composite implements IDEPresenter.Display{
 	private CodeMirror2 editor;
 	private CodeMirrorConf conf;
 	private ScrollPanel codeMirrorPanel;
-	private ErrorDialog errorDialog = new ErrorDialog();
+	private ErrorDialog errorDialog;
 	private TabLayoutPanel editorTabPanel = new TabLayoutPanel(2.5, Unit.EM);
 	private TabWidget tabWidget; 
-	private Map<Integer,Integer> feedback;
-	
 	public IDEViewPre(){
 		
 		consoleArea.setReadOnly(true);
@@ -254,8 +220,6 @@ public class IDEViewPre extends Composite implements IDEPresenter.Display{
 
 	@Override
 	public void setLineFeedBack(final Map<Integer, Integer> map) {
-		feedback = map;
-		
 		consoleArea.addClickHandler(new ClickHandler() {
 			
 			@Override

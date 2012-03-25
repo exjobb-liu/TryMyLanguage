@@ -1,16 +1,41 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 <ui:style>
+	.box{
+		background: white;
+		margin: 30px;
+		padding: 20px;
+	
+	
+	}
+	.savebutton{
+		margin: 30px;
+		float: right;
+	}
+	.verticalpanel{
+	
+		margin-left: auto;
+		margin-right:auto;
+		width: 1000px;
+	
+	
+	}
+	
+	.warrning{
+		color: red;
+	
+	}
 </ui:style>
 <g:ScrollPanel>
-<g:VerticalPanel>
+<g:VerticalPanel styleName="{style.verticalpanel}">
 <g:HorizontalPanel>
-<g:HTMLPanel>
-	<h1>Enter the specification of the language. You can seperate entities with space.</h1>
+<g:HTMLPanel styleName="{style.box}">
+	<h1>Enter the specification of the language. 
+	<br />You can seperate entities with space.</h1>
 	<g:Label>Name:</g:Label>
 	<g:TextBox ui:field="nameTextBox"></g:TextBox>
 	<g:Label>Keywords:</g:Label>
-	<g:TextArea ui:field="keywordsTextArea"></g:TextArea>
+	<g:TextArea ui:field="keywordsTextArea" width="300px"></g:TextArea>
 	<g:Label>Character(s) for single line comment:</g:Label>
 	<g:TextBox ui:field="commentSingleTextBox"></g:TextBox>
 	<g:Label>Character(s) for start of the multiple line comment:</g:Label>
@@ -21,14 +46,14 @@
 	<g:TextBox ui:field="stringCharTextBox"></g:TextBox>
 	<g:Label>Character for escaping string character within a string:</g:Label>
 	<g:TextBox ui:field="escapeCharTextBox"></g:TextBox>
-	<g:Label>Operator characters:</g:Label>
+	<g:Label>Operator character(s):(do not seperate by space on this one)</g:Label>
 	<g:TextBox ui:field="operatorsTextBox"></g:TextBox>
 	
 </g:HTMLPanel>
 
-<g:HTMLPanel>
+<g:HTMLPanel styleName="{style.box}">
 	<h1>Define Compiler Configuration here</h1>
-	<g:Label>Compilation and Execution Timeout:</g:Label>
+	<g:Label>Compilation and Execution Timeout (in milliseconds):</g:Label>
 	<g:TextBox ui:field="timeoutTextBox"></g:TextBox>
 	<g:Label>File Suffix (e.g. .java .c .py.....) without the beginning dot:</g:Label>
 	<g:TextBox ui:field="suffixTextBox"></g:TextBox>
@@ -36,12 +61,18 @@
 	<g:TextBox ui:field="compileTextBox"></g:TextBox>
 	<g:Label>Run Command:</g:Label>
 	<g:TextBox ui:field="runTextBox"></g:TextBox>
-	<g:Label>Regular Expression for Line Feedback:</g:Label>
+	<g:Label>Regular Expression for Line Feedback:(e.g. use @ in your regex where you want to indicate the line number)</g:Label>
 	<g:TextBox ui:field="feedbackTextBox"></g:TextBox>
+	<g:Label>Plot Keyword: (e.g. If the output of the program starts with a line containing only the followig keyword, the rest of the output is treated as input data for plotting.)</g:Label>
+	<g:TextBox ui:field="plot"></g:TextBox>
+	<g:Label>Sample Program:</g:Label>
+	<g:TextArea ui:field="sampleProgram" width="400px" height="145px"></g:TextArea><br />
+	
 </g:HTMLPanel>
 
 </g:HorizontalPanel>
-<g:Button ui:field="saveButton">Save</g:Button>
+<g:Label styleName="{style.warrning}">Note: all fields are required</g:Label>
+<g:Button ui:field="saveButton" styleName="{style.savebutton}">Save</g:Button>
 </g:VerticalPanel>
 </g:ScrollPanel>
 </ui:UiBinder> 

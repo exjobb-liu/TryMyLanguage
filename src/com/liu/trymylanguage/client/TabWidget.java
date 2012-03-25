@@ -4,13 +4,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -43,7 +43,8 @@ public class TabWidget extends Composite {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				rename = new RenameDialog(title.getText());
-				rename.center();
+				rename.setPopupPosition(TabWidget.this.getAbsoluteLeft()
+						,TabWidget.this.getAbsoluteTop()+30);
 				rename.show();
 				
 			}
@@ -53,7 +54,7 @@ public class TabWidget extends Composite {
 		panel.add(this.title);
 		
 		
-		setIsCloseable(isCloseable);
+		setCloseable(isCloseable);
 		
 		
 		
@@ -95,23 +96,49 @@ public class TabWidget extends Composite {
 					
 				}
 			});
-			
+			nameText.addKeyPressHandler(new KeyPressHandler() {
+				
+				@Override
+				public void onKeyPress(KeyPressEvent event) {
+					int keyCode = event.getUnicodeCharCode();
+				    if (keyCode == 0) {
+				        // Probably Firefox
+				        keyCode = event.getNativeEvent().getKeyCode();
+				    }
+					if(keyCode == KeyCodes.KEY_ENTER){
+						
+						ok.click();
+					}
+						
+					
+				}
+			});
 			buttonPanel.add(ok);
 			buttonPanel.add(close);
 			mainPanel.add(nameText);
 			mainPanel.add(buttonPanel);
+			
 			setWidget(mainPanel);
+			
+		}
+		@Override
+		protected void onLoad() {
+			
+			super.onLoad();
+			nameText.setFocus(true);
+			nameText.setSelectionRange(0, nameText.getValue().length());
 		}
 		
-		
 	}
+	
+	
 	public String toString(){
 		return title.getText();
 		
 		
 	}
 	
-	public void setIsCloseable(boolean isCloseable){
+	public void setCloseable(boolean isCloseable){
 		
 		this.isCloseable = isCloseable;
 		if(isCloseable){
@@ -138,7 +165,7 @@ public class TabWidget extends Composite {
 				//	System.out.println(parent.getWidgetCount());
 				//	parent.selectTab(parent.getWidgetCount()-1);
 					if(parent.getWidgetCount()==1){
-						((TabWidget)parent.getTabWidget(0)).setIsCloseable(false);
+						((TabWidget)parent.getTabWidget(0)).setCloseable(false);
 						
 					}
 				}
@@ -150,6 +177,10 @@ public class TabWidget extends Composite {
 			panel.remove(close);
 		
 		
+	}
+
+	public boolean isCloseable() {
+		return isCloseable;
 	}
 	
 	

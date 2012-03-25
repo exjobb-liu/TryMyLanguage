@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ErrorDialog extends DialogBox{
 	HTML message;
 	Button close;
-	public ErrorDialog(){
+	public ErrorDialog(String error){
 		VerticalPanel content = new VerticalPanel();
 		message = new HTML();
 		close = new Button("Close");
@@ -25,9 +25,17 @@ public class ErrorDialog extends DialogBox{
 		setGlassEnabled(true);
 		// center();
 		setHTML("<h3 style=\"color:red\">Error</h3>");
+		message.setHTML(error);
 		setWidget(content);
+		
 
 	}	
+	@Override
+	protected void onLoad() {
+		// TODO Auto-generated method stub
+		super.onLoad();
+		center();
+	}
 	public void addCloseButtonClickHandler(ClickHandler handler){
 		close.addClickHandler(handler);
 	

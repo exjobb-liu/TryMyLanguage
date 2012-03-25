@@ -1,18 +1,12 @@
 package com.liu.trymylanguage.client.presenter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.event.shared.HasHandlers;
 
@@ -23,7 +17,6 @@ import com.liu.trymylanguage.client.event.AddLangEvent;
 import com.liu.trymylanguage.client.view.IDEViewPre;
 import com.liu.trymylanguage.shared.ConsoleDTO;
 import com.liu.trymylanguage.shared.CodeDTO;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -53,13 +46,6 @@ import se.liu.gwt.widgets.client.CodeMirrorConf;
 
 public class IDEPresenter implements  Presenter {
 
-	/**
-	 * Creates a new <code>IDEPresenter</code> instance.
-	 *
-	 */
-	private ConsoleDTO consoleDTO;
-	private CodeDTO codeDTO;
-
 	public interface Display{
 		void addRunClickHandler(ClickHandler handler);
 		
@@ -79,14 +65,10 @@ public class IDEPresenter implements  Presenter {
 	}
 
 	private final TMLServiceAsync tmlService;
-	private final HasHandlers eventBus;
 	private Display display;
 
 	public IDEPresenter(TMLServiceAsync tmlService,final HasHandlers eventBus) {
 		this.tmlService = tmlService;
-		this.eventBus = eventBus;
-		
-		
 		tmlService.getLangParam(new AsyncCallback<LangParamDTO>() {
 
 			@Override

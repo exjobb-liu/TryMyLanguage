@@ -1,20 +1,26 @@
 package com.liu.trymylanguage.client.view;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.liu.trymylanguage.client.presenter.NewLangPresenter;
+import com.liu.trymylanguage.client.ErrorDialog;
+import com.liu.trymylanguage.client.TMLService;
+import com.liu.trymylanguage.client.TMLServiceAsync;
+import com.liu.trymylanguage.client.exception.LangNotFoundException;
+import com.liu.trymylanguage.shared.LangParamDTO;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextArea;
 
-public class NewLangUi extends Composite implements NewLangPresenter.Display{
+public class NewLangUi extends Composite {
 
-	@UiField
-	Button saveButton;
+	@UiField Button saveButton;
 	@UiField TextBox nameTextBox;
 	@UiField TextArea keywordsTextArea;
 	@UiField TextBox commentSingleTextBox;
@@ -28,8 +34,12 @@ public class NewLangUi extends Composite implements NewLangPresenter.Display{
 	@UiField TextBox runTextBox;
 	@UiField TextBox feedbackTextBox;
 	@UiField TextBox suffixTextBox;
-
+	@UiField TextBox plot;
+	@UiField TextArea sampleProgram;
 	
+
+	private LangParamDTO dto;
+	private TMLServiceAsync service;
 	private static NewLangUiUiBinder uiBinder = GWT
 			.create(NewLangUiUiBinder.class);
 
@@ -37,91 +47,90 @@ public class NewLangUi extends Composite implements NewLangPresenter.Display{
 	}
 
 	public NewLangUi() {
+		service = GWT.create(TMLService.class);
+		
+		loadConf();
+		
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	@Override
-	public String getName() {
+	@UiHandler("saveButton")
+	void handleSaveClick(ClickEvent e){
+		if(dto==null)
+			dto = new LangParamDTO();
+		dto.setCommentMEnd(commentMEndTextBox.getText());
+		dto.setCommentMStart(commentMStartTextBox.getText());
+		dto.setCommentSingle(commentSingleTextBox.getText());
+		dto.setCompileCmd(compileTextBox.getText());
+		dto.setEscapeChar(escapeCharTextBox.getText());
+		dto.setFeedbackRegex(feedbackTextBox.getText());
+		dto.setKeywords(keywordsTextArea.getText());
+		dto.setName(nameTextBox.getText());
+		dto.setOperators(operatorsTextBox.getText());
+		dto.setPlot(plot.getText());
+		dto.setRunCmd(runTextBox.getText());
+		dto.setSampleProgram(sampleProgram.getText());
 		
-		return nameTextBox.getText();
-	}
-
-	@Override
-	public String getKeywords() {
+		dto.setStringChar(stringCharTextBox.getText());
+		dto.setSuffix(suffixTextBox.getText());
+		dto.setTimeout(Long.parseLong(timeoutTextBox.getText().trim()));
 		
-		return keywordsTextArea.getText();
-	}
-
-	@Override
-	public String getOperators() {
 		
-		return operatorsTextBox.getText();
-	}
+		service.saveLang(dto, new AsyncCallback<Void>() {
 
-	@Override
-	public String getCommentSingle() {
+			@Override
+			public void onFailure(Throwable caught) {
+				new ErrorDialog("An Error occured while saving langugage data: \n"
+						+caught.getMessage()).show();
+				
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				History.newItem("ide");
+				
+			}
+		});
 		
-		return commentSingleTextBox.getText();
 	}
+	private void loadConf(){
+		service.getLangParam(new AsyncCallback<LangParamDTO>() {
 
-	@Override
-	public String getCommentMStart() {
+			@Override
+			public void onFailure(Throwable caught) {
+				if(!(caught instanceof LangNotFoundException))
+					new ErrorDialog(caught.getMessage()).show();
+				
+			}
+
+			@Override
+			public void onSuccess(LangParamDTO result) {
+				if(result!=null){
+					nameTextBox.setText(result.getName());
+					keywordsTextArea.setText(result.getKeywords());
+					commentSingleTextBox.setText(result.getCommentSingle());
+					commentMStartTextBox.setText(result.getCommentMStart());
+					commentMEndTextBox.setText(result.getCommentMEnd());
+					stringCharTextBox.setText(result.getStringChar());
+					escapeCharTextBox.setText(result.getEscapeChar());
+					operatorsTextBox.setText(result.getOperators());
+					timeoutTextBox.setText(result.getTimeout()+"");
+					compileTextBox.setText(result.getCompileCmd());
+					runTextBox.setText(result.getRunCmd());
+					feedbackTextBox.setText(result.getFeedbackRegex());
+					suffixTextBox.setText(result.getSuffix());
+					plot.setText(result.getPlot());
+					sampleProgram.setText(result.getSampleProgram());
+					
+					
+				
+				}
+				
+			}
+		});
 		
-		return commentMStartTextBox.getText();
-	}
-
-	@Override
-	public String getCommentMEnd() {
 		
-		return commentMEndTextBox.getText();
-	}
-
-	@Override
-	public String getEscapeChar() {
-		return escapeCharTextBox.getText();
-	}
-
-	@Override
-	public String getStringChar() {
 		
-		return stringCharTextBox.getText();
-	}
-
-	
-
-	@Override
-	public String getTimeout() {
-		
-		return timeoutTextBox.getText();
-	}
-
-	@Override
-	public String getCompileCmd() {
-		
-		return compileTextBox.getText();
-	}
-
-	@Override
-	public String getRunCmd() {
-		
-		return runTextBox.getText();
-	}
-
-	@Override
-	public String getFeedbackRegex() {
-		
-		return feedbackTextBox.getText();
-	}
-	
-	
-	public String getSuffix(){
-		return suffixTextBox.getText();
-	}
-
-	@Override
-	public void addSaveButtonClickHandler(ClickHandler handler) {
-		
-		saveButton.addClickHandler(handler);
 	}
 
 }

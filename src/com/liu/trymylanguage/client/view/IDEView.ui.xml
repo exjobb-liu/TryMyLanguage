@@ -24,8 +24,9 @@
 			
 
 			color: #6E6E6E;
-			padding: 25px;
+			
 			margin: 10px 5px 10px 20px;
+			
 			border-bottom: solid 2px #BBC1BF;
 		}
 		.console {
@@ -33,70 +34,48 @@
 			
 
 			color: #6E6E6E;
-			padding: 0px 25px;
+			padding: 0 4px 4px 0;
 			margin: 5px 20px 10px 5px;
 			border-bottom: solid 2px #BBC1BF;
 		}
 		
 		
 	</ui:style>
-	<g:DockLayoutPanel styleName="{style.background}">
-		<g:north size="30">
-			<g:HorizontalPanel>
-				<g:Button ui:field="runButton">Run</g:Button>
-				<g:Button ui:field="newTabButton">New Tab</g:Button>
-			</g:HorizontalPanel>
-		</g:north>
-		<g:south size="2">
-			<g:VerticalPanel></g:VerticalPanel>
-		</g:south>
-		<g:center>
+	<g:SimpleLayoutPanel styleName="{style.background}">
+		
+		
 			<g:SplitLayoutPanel>
 				<g:west size="300">
-					<g:HTMLPanel ui:field="tutorialArea" styleName="{style.sidebar}">
-						<html>
-							<head>
-								
-							
-							</head>
-							<body>	
-							
-								<div>
-									<p id="code">import java.io;<br /> public class &nbsp;&nbsp;&nbsp;&nbsp;Test(){
-										<br />&nbsp;public static void main(argsv[]){<br />&nbsp;&nbsp;System.out.println("hello\n");<br />
-																					
-										&nbsp;}<br />
-																				
-										}<br />
-									
-								</p>
-									<button onclick="f()">>></button>
-								
-								</div>			
-							</body>
-						</html>
-					</g:HTMLPanel>
+					<g:SimplePanel styleName="{style.sidebar}" ui:field="tutorialArea"></g:SimplePanel>
 					
 				</g:west>
 				<g:north size="500">
+					<g:LayoutPanel>
+						<g:layer top="10px" height="25px">
+						<g:HorizontalPanel>
+							<g:Button ui:field="runButton">Run</g:Button>
+							<g:Button ui:field="newTabButton">New Tab</g:Button>
+						</g:HorizontalPanel>
+						</g:layer>
+						<g:layer top="35px" bottom="0px">
+						<g:TabLayoutPanel ui:field="tabPanel" barHeight="31"  height="100%">
+							
+						</g:TabLayoutPanel>
+						</g:layer>
 					
-					<g:TabLayoutPanel ui:field="tabPanel" barHeight="31"  >
-						
-					</g:TabLayoutPanel>
-				
-				
+					</g:LayoutPanel>
 				</g:north>
 				<g:center>
 					
-					<g:HTMLPanel ui:field="consoleArea" styleName="{style.console}">
+					<g:SimplePanel ui:field="consoleArea" styleName="{style.console}" >
 						
 					
-					</g:HTMLPanel>
+					</g:SimplePanel>
 				
 				</g:center>
 			</g:SplitLayoutPanel>
 		
-		</g:center>
+		
 	
-	</g:DockLayoutPanel>
+	</g:SimpleLayoutPanel>
 </ui:UiBinder> 
