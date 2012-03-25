@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import org.junit.* ;
 import static org.junit.Assert.* ;
 import com.liu.trymylanguage.client.TMLService;
+import com.liu.trymylanguage.client.exception.TMLException;
 
 import com.liu.trymylanguage.shared.CodeDTO;
 import com.liu.trymylanguage.shared.ConsoleDTO;
@@ -69,13 +70,14 @@ public class TMLServiceTest  {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-		System.out.println(p.getLineFeedback().get(1));
+//		System.out.println(p.getLineFeedback().get(1));
+		System.out.println(p.getContent());
 	assertTrue("Hello\n".equals(p.getContent()));
 	
 	
     }
     
-    @Test
+  
     public void test_saveLang(){
     	TMLService tml = new TMLServiceImpl();
     	LangParamDTO dto = new LangParamDTO();
@@ -96,22 +98,33 @@ public class TMLServiceTest  {
     	
     	try {
     		tml.saveLang(dto);
-			ObjectInput obj = new ObjectInputStream(new BufferedInputStream(new FileInputStream("langparam.bin")));
+			ObjectInput obj = new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream("langparam.bin")));
 			dto1 = (LangParamDTO) obj.readObject();
-		} catch (FileNotFoundException e) {
+			obj.close();
+			dto1.setTimeout(7000);
+			tml.saveLang(dto1);
+			ObjectInput obj1 = new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream("langparam.bin")));
+			LangParamDTO dto2 = (LangParamDTO)obj1.readObject();
+			obj1.close();
+			assertEquals(7000, dto2.getTimeout());
+		} catch (TMLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
     	
     	assertTrue(dto.getName().equals(dto1.getName()));
     }
-    @Test
+   
     public void test_getLangParam(){
     	
     	TMLService tml = new TMLServiceImpl();

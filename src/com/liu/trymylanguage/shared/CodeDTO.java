@@ -13,6 +13,11 @@ public class CodeDTO implements java.io.Serializable {
   
 	
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Describe fileName here.
      */
     private String fileName;

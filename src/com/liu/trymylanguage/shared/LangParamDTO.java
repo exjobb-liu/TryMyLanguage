@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 
 public class LangParamDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String keywords;
 	private String operators;
@@ -17,8 +21,31 @@ public class LangParamDTO implements Serializable {
 	private String runCmd; 
 	private long timeout; 
 	private String suffix;
+	private String plot;
+	private boolean isSandboxed;
+	
+	
+	public boolean isSandboxed() {
+		return isSandboxed;
+	}
+	public void setSandboxed(boolean isSandboxed) {
+		this.isSandboxed = isSandboxed;
+	}
+	public String getSampleProgram() {
+		return sampleProgram;
+	}
+	public void setSampleProgram(String sampleProgram) {
+		this.sampleProgram = sampleProgram;
+	}
+	private String sampleProgram;
 
 	
+	public String getPlot() {
+		return plot;
+	}
+	public void setPlot(String plot) {
+		this.plot = plot;
+	}
 	public String getSuffix() {
 		return suffix;
 	}

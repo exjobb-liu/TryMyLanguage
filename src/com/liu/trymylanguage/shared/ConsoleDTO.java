@@ -12,6 +12,11 @@ import java.util.Map;
 public class ConsoleDTO implements java.io.Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Describe content here.
      */
     private String content;
@@ -21,11 +26,15 @@ public class ConsoleDTO implements java.io.Serializable {
      */
     
     private Map<Integer,Integer> lineFeedback;
+    
+    private boolean isPlot;
 
-    public ConsoleDTO(){}
-    public ConsoleDTO(String content,Map<Integer,Integer> lineFeedback){
+  
+	public ConsoleDTO(){}
+    public ConsoleDTO(String content, boolean isPlot){
     	this.content=content;
-    	this.lineFeedback = lineFeedback;
+    	
+    	this.isPlot = isPlot;
     }
 
 
@@ -52,6 +61,11 @@ public class ConsoleDTO implements java.io.Serializable {
     public void setContent(String newContent) {
 	this.content = newContent;
     }
-
+    public boolean isPlot() {
+  		return isPlot;
+  	}
+  	public void setPlot(boolean isPlot) {
+  		this.isPlot = isPlot;
+  	}
    
 }

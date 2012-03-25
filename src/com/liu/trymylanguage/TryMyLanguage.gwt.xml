@@ -11,6 +11,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
   <inherits name='se.liu.gwt.widgets.CodeMirror2'/>
+    <inherits name='com.google.gwt.visualization.Visualization'/>
   <!-- inherits name='se.liu.get.widgets.client.CodeMirrorConf'/-->
   <!-- Other module inherits                                      -->
 

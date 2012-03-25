@@ -2,15 +2,30 @@ package com.liu.trymylanguage.server;
 
 import static org.junit.Assert.*;
 
-import java.util.Iterator;
+import java.io.File;
 import java.util.Map;
-import java.util.Set;
-
 import org.junit.Test;
 
-import com.liu.trymylanguage.client.TMLService;
-
 public class TmlUtilTest {
+	
+	@Test
+	public void test_runCmdRoot(){
+		try {
+			TmlUtil tmlUtil = new TmlUtil();
+			( new File("output")).mkdir();
+			( new File("output/outputtest")).mkdir();
+			File dir = new File("output/outputtest");
+			System.out.println(dir.getCanonicalFile().getAbsolutePath());
+			String s = tmlUtil.
+					runCmd("gcc default.cpp -o default", 7000, new File("output"));
+			System.out.println(s);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 
 	@Test
 	public void test_getErrorMap() {

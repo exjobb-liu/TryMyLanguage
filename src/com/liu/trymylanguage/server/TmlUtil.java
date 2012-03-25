@@ -1,10 +1,18 @@
 package com.liu.trymylanguage.server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.buildobjects.process.ExternalProcessFailureException;
+import org.buildobjects.process.ProcBuilder;
+import org.buildobjects.process.StartupException;
+import org.buildobjects.process.TimeoutException;
+
 
 import com.liu.trymylanguage.shared.LangParamDTO;
 
@@ -24,10 +32,73 @@ public class TmlUtil {
 	}
 
 	
-	public static String runCmd(String cmd, long timeout) throws IOException {
+	public static String runCmdroot(String cmd, long timeout, File dir) throws IOException {
+	ByteArrayOutputStream output = new ByteArrayOutputStream();
 		
-		return null;
+		String[] s = cmd.split("\\s");
+		
+		String[] args = new String[s.length-1];
+		for (int i = 1; i < s.length; i++) {
+			args[i-1] = s[i];
+		}
+		
+		
+		ProcBuilder builder = new ProcBuilder(s[0])
+				.withWorkingDirectory(dir)
+				.withArgs(args)
+		        .withOutputStream(output)
+		        .withTimeoutMillis(timeout);
+		
+		
+		
+		String out = new String();
+		try {
+			
+			builder.run();
+		} catch (ExternalProcessFailureException e) {
+			
+			out = e.getStderr();
+			
+		}
+		        
+		out += output.toString();
+		return out;
+
 	}
+	public  String runCmd(String cmd, 
+			long timeout, File dir) 
+					throws StartupException,TimeoutException,
+					ExternalProcessFailureException{
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		
+		
+		
+			
+			String[] s = cmd.split("\\s");
+			String[] args = new String[s.length-1];
+			
+			for (int i = 1; i < s.length; i++) {
+				args[i-1] = s[i];
+			}
+			
+			
+			ProcBuilder builder = new ProcBuilder(s[0])
+					.withWorkingDirectory(dir)
+					.withArgs(args)
+			        .withOutputStream(output)
+			        .withTimeoutMillis(timeout);
+			
+			
+			
+			builder.run();
+		
+			
+			
+			
+			
+			return output.toString();
+
+		}
 	
 	public static Map<Integer,Integer> getErrorMap(String[] lines,String regex){
 		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
@@ -44,6 +115,22 @@ public class TmlUtil {
 		}
 		
 		return map;
+	}
+
+	
+	public static boolean deleteDir(File dir) {
+	    if (dir.isDirectory()) {
+	        String[] children = dir.list();
+	        for (int i=0; i<children.length; i++) {
+	            boolean success = deleteDir(new File(dir, children[i]));
+	            if (!success) {
+	                return false;
+	            }
+	        }
+	    }
+
+	    // The directory is now empty so delete it
+	    return dir.delete();
 	}
 
 }

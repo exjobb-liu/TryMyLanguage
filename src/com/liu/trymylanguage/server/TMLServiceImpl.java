@@ -1,14 +1,15 @@
 package com.liu.trymylanguage.server;
 
 
-import java.util.ArrayList;
+import java.util.ServiceConfigurationError;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import com.liu.trymylanguage.client.TMLService;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import com.liu.trymylanguage.client.exception.LangNotFoundException;
+import com.liu.trymylanguage.client.exception.TMLException;
+
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 
 import java.io.FileOutputStream;
@@ -30,28 +31,44 @@ import com.liu.trymylanguage.shared.LangParamDTO;
 
 
 
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.buildobjects.process.ExternalProcessFailureException;
-import org.buildobjects.process.ProcBuilder;
-
-import com.liu.trymylanguage.shared.FileTypeDTO;
+import org.buildobjects.process.StartupException;
+import org.buildobjects.process.TimeoutException;
 
 public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private PlotDataConvertorService convertor;
+	private TmlUtil tmlUtil;
+	public TMLServiceImpl(){
+		convertor = PlotDataConvertorService.getInstance();
+		tmlUtil = new TmlUtil();
+		
+	}
 	
-	
-	
-	public ConsoleDTO compile(CodeDTO code) throws Exception {
+	public ConsoleDTO compile(CodeDTO code) throws TMLException {
 
-		LangParamDTO dto = this.getLangParam();
-		String result = "";
+		LangParamDTO dto = getLangParam();
+	
+		String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
+		regex = regex.replaceAll("<filename>",code.getFileName());
+		regex = regex.replaceAll("<suffix>",dto.getSuffix());
+		
+		
+		
+		String runResult = "";
+		
 		BufferedWriter bfw = null;
+		
 		String dirPath = "output-"+Thread.currentThread().getId()+"/";
 		File dir=null;
-		if((dir = new File(dirPath)).mkdir()){
+		if((dir = new File("output/"+dirPath)).mkdir()){
 			try {
 
-				File file = new File(dirPath+code.getFileName()+"."+dto.getSuffix());
-				dir = new File(dirPath);
+				File file = new File("output/"+dirPath+code.getFileName()+"."+dto.getSuffix());
+				dir = new File("output/"+dirPath);
 				bfw = new BufferedWriter(new FileWriter(file));
 				bfw.write(code.getCode());
 				bfw.flush();
@@ -64,34 +81,71 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 					
 					String ccmd = dto.getCompileCmd().replaceAll("<filename>",code.getFileName());
 					ccmd = ccmd.replaceAll("<suffix>", dto.getSuffix());	
-					result+=runCmd(ccmd,dto.getTimeout(),dir);
-
+					
+					tmlUtil.runCmd(ccmd,dto.getTimeout(),dir);
+					//System.out.println(compileResult);
 
 
 				}
 				String rcmd = dto.getRunCmd().replaceAll("<filename>",code.getFileName());
 				rcmd = rcmd.replaceAll("<suffix>", dto.getSuffix());
 
-				result +=runCmd(rcmd,dto.getTimeout(),dir);
+				runResult =tmlUtil.runCmd(rcmd,dto.getTimeout(),dir);
 
 			} catch (IOException ex) {
 
 				ex.printStackTrace();
-				throw new Exception(ex.getMessage());
+				throw new TMLException(ex.getMessage());
 			
+			}catch (TimeoutException e) {
+				e.printStackTrace();
+				throw new TMLException("Execution of the program has been timed out");
+			}catch (StartupException e) {
+				e.printStackTrace();
+				throw new TMLException(e.getMessage());
+			}catch (ExternalProcessFailureException e) {
+				ConsoleDTO c = new ConsoleDTO();
+				c.setContent(e.getStderr());
+				c.setLineFeedback(TmlUtil.getErrorMap(e.getStderr().split("\\n"), regex));
+				return c;
 			}finally{
 				
-				this.deleteDir(dir);
+				TmlUtil.deleteDir(new File("output/"+dirPath));
 
 			}
-			String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
-			regex = regex.replaceAll("<filename>",code.getFileName());
-			regex = regex.replaceAll("<suffix>",dto.getSuffix());
+			
 
-
-			return new ConsoleDTO(result,TmlUtil.getErrorMap(result.split("\\n"), regex));
+			String first = runResult
+					.substring(0, runResult.indexOf("\n"));
+			if(dto.getPlot()!=null &&
+					first!=null &&
+					dto.getPlot().equals(first)){ 
+				try {
+					runResult= convertor.convert(runResult);
+				} catch (ClassNotFoundException e) {
+					
+					e.printStackTrace();
+					throw new TMLException("No plot data convertor has been found");
+				} catch (ServiceConfigurationError e) {
+					
+					
+					e.printStackTrace();
+					throw new TMLException("There has been a problem with plot data conversion");
+				}	
+				return new ConsoleDTO(runResult
+						.substring(runResult.indexOf("\n")+1),true);
+			}
+			else
+			{
+				ConsoleDTO c = new ConsoleDTO();
+				c.setContent(runResult);
+				c.setLineFeedback(TmlUtil.getErrorMap(runResult.split("\\n"), regex));
+				c.setPlot(false);
+			return c;
+			
+			}
 		}else
-			throw new Exception("A user directory to place the source and executable file can not be created");
+			throw new TMLException("A user directory to place the source and executable file can not be created");
 
 	} 
 	
@@ -107,96 +161,107 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	 */
 	
 	@Override
-	public void saveLang(LangParamDTO dto) {
+	public void saveLang(LangParamDTO dto) throws TMLException {
+		
 		try {
-			ObjectOutput output = new ObjectOutputStream(new FileOutputStream("langparam.bin"));
+			
+			
+			ObjectOutput output = new ObjectOutputStream(
+					new FileOutputStream("langparam.bin"));
+			
 			output.writeObject(dto);
 			output.flush();
 			output.close();
+			
+				
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+			throw new TMLException("Can not save the language configuration: \n"
+					+e.getMessage());
 		}
-
+		
 	}
 	@Override
-	public LangParamDTO getLangParam() throws Exception{
+	public LangParamDTO getLangParam() throws TMLException{
 
-		LangParamDTO dto = null;
-		try {
-			ObjectInput obj = new ObjectInputStream(new BufferedInputStream(new FileInputStream("langparam.bin")));
-			dto = (LangParamDTO)obj.readObject();
-			obj.close();
+
+		
+		
+			ObjectInput obj = null;
+			LangParamDTO dto;
+			try {
+				obj = new ObjectInputStream(new BufferedInputStream(
+						new FileInputStream("langparam.bin")));
+				 dto = (LangParamDTO)obj.readObject();
+				 if(dto==null)
+					 throw new LangNotFoundException();
+			} catch (FileNotFoundException e) {
+				
+				e.printStackTrace();
+				throw new LangNotFoundException();
+			} catch (ClassNotFoundException e) {
+				
+				e.printStackTrace();
+				throw new TMLException("There has been an error loading language configuration: \n"
+						+e.getMessage());
 			
-		} 
-		catch (FileNotFoundException e){
-			throw new Exception("No Language configuration is found");
-		}catch (IOException e) {
+			}catch (IOException e ) {
+				e.printStackTrace();
+				throw new TMLException("There has been an error loading language configuration: \n"
+						+e.getMessage());
+			}finally{
+				
+				if(obj!=null){
+						try {
+							obj.close();
+						} catch (IOException e) {
+							
+							e.printStackTrace();
+						}
+					}
+				
+			}
+			
+			
+		
+		/*	throw new Exception("No Language configuration is found");
+		
 			e.printStackTrace();
 			throw new Exception("Language configuration can not be loaded");
 			// TODO Auto-generated catch block
 			
-		} catch (ClassNotFoundException e) {
+		
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		*/
 		return dto;
 	}
-
-	private String runCmd(String cmd,long timeout, File dir) throws IOException{
-		
-		
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		
-		String[] s = cmd.split("\\s");
-		String[] args = new String[s.length-1];
-		for (int i = 1; i < s.length; i++) {
-			args[0] = s[i];
-		}
-		
-		
-		ProcBuilder builder = new ProcBuilder(s[0])
-				.withWorkingDirectory(dir)
-				.withArgs(args)
-		        .withOutputStream(output)
-		        .withTimeoutMillis(timeout);
-		
-		
-		
-		String out = new String();
-		try {
-			builder.run();
-		} catch (ExternalProcessFailureException e) {
-			
-			out = e.getStderr();
-			
-		}
-		        
-		out += output.toString();
-		return out;
-
-	}
-	private boolean deleteDir(File dir) {
-	    if (dir.isDirectory()) {
-	        String[] children = dir.list();
-	        for (int i=0; i<children.length; i++) {
-	            boolean success = deleteDir(new File(dir, children[i]));
-	            if (!success) {
-	                return false;
-	            }
-	        }
-	    }
-
-	    // The directory is now empty so delete it
-	    return dir.delete();
-	}
-
+	
+	
+	
 
 	@Override
 	public boolean isConfigured() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+	@Override
+	public String getPlotData(String data) throws TMLException {
+		// TODO Auto-generated method stub
+		String out= null;
+		try {
+			out = convertor.convert(data);
+		} catch (ClassNotFoundException e) {
+			throw new TMLException("No plot data convertor has been found: \n"+e.getMessage());
+		}
+		return out;
+	}
+
+
 	
 	
 }
