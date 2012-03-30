@@ -62,13 +62,13 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		
 		BufferedWriter bfw = null;
 		
-		String dirPath = "output-"+Thread.currentThread().getId()+"/";
+		String dirPath = "webapps/tml/output-"+Thread.currentThread().getId()+"/";
 		File dir=null;
-		if((dir = new File("output/"+dirPath)).mkdir()){
+		if((dir = new File("webapps/tml/output/"+dirPath)).mkdir()){
 			try {
 
-				File file = new File("output/"+dirPath+code.getFileName()+"."+dto.getSuffix());
-				dir = new File("output/"+dirPath);
+				File file = new File("webapps/tml/output/"+dirPath+code.getFileName()+"."+dto.getSuffix());
+				dir = new File("webapps/tml/output/"+dirPath);
 				bfw = new BufferedWriter(new FileWriter(file));
 				bfw.write(code.getCode());
 				bfw.flush();
@@ -110,7 +110,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 				return c;
 			}finally{
 				
-				TmlUtil.deleteDir(new File("output/"+dirPath));
+				TmlUtil.deleteDir(new File("webapps/tml/output/"+dirPath));
 
 			}
 			
@@ -167,7 +167,8 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			
 			
 			ObjectOutput output = new ObjectOutputStream(
-					new FileOutputStream("langparam.bin"));
+					new FileOutputStream("webapps/tml/langparam.bin"));
+			
 			
 			output.writeObject(dto);
 			output.flush();
@@ -193,7 +194,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			LangParamDTO dto;
 			try {
 				obj = new ObjectInputStream(new BufferedInputStream(
-						new FileInputStream("langparam.bin")));
+						new FileInputStream("webapps/tml/langparam.bin")));
 				 dto = (LangParamDTO)obj.readObject();
 				 if(dto==null)
 					 throw new LangNotFoundException();
