@@ -62,7 +62,7 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		
 		BufferedWriter bfw = null;
 		
-		String dirPath = "webapps/tml/output-"+Thread.currentThread().getId()+"/";
+		String dirPath = "output-"+Thread.currentThread().getId()+"/";
 		File dir=null;
 		if((dir = new File("webapps/tml/output/"+dirPath)).mkdir()){
 			try {

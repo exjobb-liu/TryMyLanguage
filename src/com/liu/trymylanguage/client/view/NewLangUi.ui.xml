@@ -53,10 +53,14 @@
 
 <g:HTMLPanel styleName="{style.box}">
 	<h1>Define Compiler Configuration here</h1>
+	
 	<g:Label>Compilation and Execution Timeout (in milliseconds):</g:Label>
 	<g:TextBox ui:field="timeoutTextBox"></g:TextBox>
 	<g:Label>File Suffix (e.g. .java .c .py.....) without the beginning dot:</g:Label>
 	<g:TextBox ui:field="suffixTextBox"></g:TextBox>
+	<p>You can use &lt;filename&gt; and &lt;suffix&gt; in the following 3 fields.
+	 For example the Compile command for java can be: javac &lt;filename&gt;.&lt;java&gt;
+	 assuming that you have java for in the suffix field</p>
 	<g:Label>Compile Command:</g:Label>
 	<g:TextBox ui:field="compileTextBox"></g:TextBox>
 	<g:Label>Run Command:</g:Label>

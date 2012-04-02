@@ -6,6 +6,8 @@ import java.util.Set;
 
 import se.liu.gwt.widgets.client.CodeMirror2;
 import se.liu.gwt.widgets.client.CodeMirrorConf;
+import se.liu.gwt.widgets.client.event.CursorActivityEvent;
+import se.liu.gwt.widgets.client.event.CursorActivityHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
@@ -114,13 +116,15 @@ public class IDEView extends Composite {
 					
 					//clear line marking after clicking on the editor panel
 					// TODO Move this functionality to CodeMirror class
-					c.addClickHandler(new ClickHandler() {
+					c.addCursorActivityHandler(new CursorActivityHandler() {
 						
 						@Override
-						public void onClick(ClickEvent event) {
-							if(console.getLastSelectedLine()!=null)
+						public void onCursorActivity(CursorActivityEvent event) {
+							
+							if(console.getLastSelectedLine()!=null){
 								c.markLine(console.getLastSelectedLine());
 								console.setLastSelectedLine(null);
+							}
 						}
 					});
 					ResizeableFrame f = new ResizeableFrame("doc/index.html");
@@ -182,7 +186,7 @@ public class IDEView extends Composite {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				
+					
 					new ErrorDialog(caught.getMessage()).show();
 
 			}
@@ -298,18 +302,22 @@ public class IDEView extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (console.getLastSelectedLine()!=null){
-					c.markLine(console.getLastSelectedLine());
-					console.setLastSelectedLine(null);
-				}
 				Integer ln = (Integer)map.get(console.getSelectedLine());
 				
-				if(ln!=null){
+				if (console.getLastSelectedLine()!=null){
 					
-					c.markLine(ln-1);
-					console.setLastSelectedLine(ln-1);
+					c.markLine(console.getLastSelectedLine());
+					console.setLastSelectedLine(null);	
+				}
+				
+				
+				if(ln!=null){
 					c.setCursor(ln-1, 0);
-					//editor.focus();
+					c.markLine(ln-1);
+					c.setFocus(true);
+					console.setLastSelectedLine(ln-1);
+					
+					
 				}
 			}
 		});
@@ -421,7 +429,6 @@ public class IDEView extends Composite {
 					else if(v.isArray()!=null)
 						options.set(string, (v.isArray()).getJavaScriptObject());
 				}
-
 
 			}
 			dataObj = ((JSONObject)chart.get("data"))
