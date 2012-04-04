@@ -115,7 +115,7 @@ public class IDEView extends Composite {
 					console.setStyleName("consoleTextArea");
 					
 					//clear line marking after clicking on the editor panel
-					// TODO Move this functionality to CodeMirror class
+					
 					c.addCursorActivityHandler(new CursorActivityHandler() {
 						
 						@Override
