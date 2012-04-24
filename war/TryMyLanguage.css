@@ -54,48 +54,48 @@ strong {
 }	
 
 .gwt-TabLayoutPanel {
-			background: #FFFFFF;
-			margin: 10px 20px 5px 5px;
-			color: #6E6E6E;
-			
-			
-			border-bottom: solid 2px #BBC1BF;
-		}
-		
-		
-		 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs{
-			
-				background: #C9CFCD url(image/img01.gif);
-				top: 0px;
-				
-				border-bottom: solid 5px #993366;
+	background: #FFFFFF;
+	margin: 10px 20px 5px 5px;
+	color: #6E6E6E;
 	
-		}
-		
-		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab{
-			
-				background-color: #CC6699;
-				margin: 0px 5px;
-				padding: 0px 5px;
-		
 	
-		}
-		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabInner{
-			
-			
-			color: white;
-		}
-		.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected{
-			background-color: #993366;
-			padding: 0px 5px;
-			color: white;
-		}
-		.gwt-DialogBox { 
+	border-bottom: solid 2px #BBC1BF;
+}
 
-			border: 1px solid black;
-			padding: 5px;
-			background-color: white;
-		}
+
+ .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs{
+	
+		background: #C9CFCD url(image/img01.gif);
+		top: 0px;
+		
+		border-bottom: solid 5px #993366;
+
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab{
+	
+		background-color: #CC6699;
+		margin: 0px 5px;
+		padding: 0px 5px;
+
+
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabInner{
+	
+	
+	color: white;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected{
+	background-color: #993366;
+	padding: 0px 5px;
+	color: white;
+}
+.gwt-DialogBox { 
+
+	border: 1px solid black;
+	padding: 5px;
+	background-color: white;
+}
 .gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger:hover {
 
 	cursor:col-resize;
@@ -106,25 +106,25 @@ strong {
 } 
 
 .consoleTextArea {
-			background: #FFFFFF;
-			height:100%;
-			width: 100%;
-			
-			color: #6E6E6E;
-			resize: none;
-			
-		}
-		
-		
-		.tutorialArea {
-			background: #FFFFFF;
-			height:100%;
-			width: 100%;
-			
-			color: #6E6E6E;
-		
-			
-		}
+	background: #FFFFFF;
+	height:100%;
+	width: 100%;
+	
+	color: #6E6E6E;
+	resize: none;
+	
+}
+
+
+.tutorialArea {
+	background: #FFFFFF;
+	height:100%;
+	width: 100%;
+	
+	color: #6E6E6E;
+
+	
+}
 		
 
 .bgMarkedLine{
@@ -137,4 +137,9 @@ strong {
   filter: literal("alpha(opacity=30)");
 
 
+}
+
+.error{
+		color: red;
+		
 }

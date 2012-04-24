@@ -49,12 +49,13 @@
 					<g:SimplePanel styleName="{style.sidebar}" ui:field="tutorialArea"></g:SimplePanel>
 					
 				</g:west>
-				<g:north size="500">
+				<g:north size="400">
 					<g:LayoutPanel>
 						<g:layer top="10px" height="25px">
 						<g:HorizontalPanel>
 							<g:Button ui:field="runButton">Run</g:Button>
 							<g:Button ui:field="newTabButton">New Tab</g:Button>
+							<g:Button ui:field="renameButton">Rename</g:Button>
 						</g:HorizontalPanel>
 						</g:layer>
 						<g:layer top="35px" bottom="0px">

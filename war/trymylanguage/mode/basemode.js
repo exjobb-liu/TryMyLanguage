@@ -25,6 +25,7 @@ CodeMirror.defineMode("basemode", function(config,parserConfig) {
 
 		if (/\d/.test(ch)) {
 			stream.eatWhile(/[\w\.]/);
+			
 			return "number";
 		}	
 
@@ -46,6 +47,7 @@ CodeMirror.defineMode("basemode", function(config,parserConfig) {
 
 		if (isOperatorChar.test(ch)) {
 			stream.eatWhile(isOperatorChar);
+			
 			return "operator";
 		}
 

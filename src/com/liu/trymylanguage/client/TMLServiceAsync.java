@@ -12,5 +12,6 @@ public interface TMLServiceAsync {
 	void getLangParam(AsyncCallback<LangParamDTO> callback);
 	void isConfigured(AsyncCallback<Boolean> callback);
 	void getPlotData(String data, AsyncCallback<String> callback);
+	void getLangParamAddLang(AsyncCallback<LangParamDTO> callback);
 	
 }

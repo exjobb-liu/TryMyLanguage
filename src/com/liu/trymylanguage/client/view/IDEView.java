@@ -23,6 +23,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.server.rpc.UnexpectedException;
 
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
@@ -63,7 +65,7 @@ public class IDEView extends Composite {
 	@UiField TabLayoutPanel tabPanel;
 	@UiField SimplePanel tutorialArea;
 	@UiField SimplePanel consoleArea;
-
+	@UiField Button renameButton;
 
 	private static IDEViewUiBinder uiBinder = GWT.create(IDEViewUiBinder.class);
 	private TMLServiceAsync service;
@@ -114,8 +116,7 @@ public class IDEView extends Composite {
 					consoleArea.setWidget(console);
 					console.setStyleName("consoleTextArea");
 					
-					//clear line marking after clicking on the editor panel
-					
+					//clear line marking in case of cursor activity
 					c.addCursorActivityHandler(new CursorActivityHandler() {
 						
 						@Override
@@ -128,6 +129,7 @@ public class IDEView extends Composite {
 						}
 					});
 					ResizeableFrame f = new ResizeableFrame("doc/index.html");
+					
 					tutorialArea.setWidget(f);
 					f.setStyleName("tutorialArea");
 					
@@ -187,7 +189,8 @@ public class IDEView extends Composite {
 			@Override
 			public void onFailure(Throwable caught) {
 					
-					new ErrorDialog(caught.getMessage()).show();
+						new ErrorDialog(caught.getMessage()).show();
+					
 
 			}
 		});
@@ -205,9 +208,15 @@ public class IDEView extends Composite {
 		}
 	}
 
+	@UiHandler("renameButton")
+	void handleRenameClick(ClickEvent e){
+		
+		int selected  = tabPanel.getSelectedIndex();
+		TabWidget w= (TabWidget)tabPanel.getTabWidget(selected);
+		w.showRenameDialog();
+	}
 
-
-	//************ UI Handlers ******************//
+	//*********************************************//
 
 
 
@@ -242,8 +251,11 @@ public class IDEView extends Composite {
 		mode.put("commentMStart",new JSONString(dto.getCommentMStart()));
 		mode.put("commentMEnd",new JSONString(dto.getCommentMEnd()));
 		mode.put("escapeCh",new JSONString(dto.getEscapeChar()));
-		mode.put("isOperatorChar",new JSONString("/"+dto.getOperators()+"/"));
-
+		dto.setOperators(dto.getOperators().replace("-", "\\-"));
+		dto.setOperators(dto.getOperators().replace("^", "\\^"));
+		mode.put("isOperatorChar",new JSONString("["+dto.getOperators().
+				replace(" ", "")+"]"));
+		
 		CodeMirrorConf conf= new CodeMirrorConf();
 
 
@@ -260,14 +272,14 @@ public class IDEView extends Composite {
 	private void showAddLangErrorDialog(){
 
 
-		ErrorDialog errorDialog = new ErrorDialog("No Language is Configured");
-
+		ErrorDialog errorDialog = new ErrorDialog("Welcome to TryMyLanguage");
+		errorDialog.setHTML("");
 		errorDialog.setCloseButtonText("Click here to configure a language");
 		errorDialog.addCloseButtonClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				History.newItem("addLang");
+				History.newItem("configure");
 
 			}
 		});		

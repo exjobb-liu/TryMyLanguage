@@ -15,6 +15,7 @@ public interface TMLService extends RemoteService {
     
     void saveLang(LangParamDTO dto) throws TMLException;
     LangParamDTO getLangParam() throws TMLException;
+    LangParamDTO getLangParamAddLang() throws TMLException;
     String getPlotData(String data) throws TMLException;
     boolean isConfigured();
 }

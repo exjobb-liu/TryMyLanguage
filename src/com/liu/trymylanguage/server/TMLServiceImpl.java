@@ -77,20 +77,59 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 					bfw.close();		
 				}
 
-				if(dto.getCompileCmd()!=null && !dto.getCompileCmd().equals("")){
+				if(dto.getCompileCmd()!=null && !dto.getCompileCmd().trim().equals("")){
 					
 					String ccmd = dto.getCompileCmd().replaceAll("<filename>",code.getFileName());
 					ccmd = ccmd.replaceAll("<suffix>", dto.getSuffix());	
 					
 					tmlUtil.runCmd(ccmd,dto.getTimeout(),dir);
 					//System.out.println(compileResult);
-
-
+					
 				}
-				String rcmd = dto.getRunCmd().replaceAll("<filename>",code.getFileName());
+				String rcmd = dto.getRunCmd().replaceAll("<filename>",
+						code.getFileName());
 				rcmd = rcmd.replaceAll("<suffix>", dto.getSuffix());
-
+				
+				
+				
 				runResult =tmlUtil.runCmd(rcmd,dto.getTimeout(),dir);
+				System.out.println(rcmd);
+				System.out.println(runResult);
+				
+				String first = null;
+				
+				if(runResult.indexOf("\n")==-1){
+					first = runResult;
+				}else
+					first = runResult
+						.substring(0, runResult.indexOf("\n"));
+				
+				if(dto.getPlot()!=null &&
+						first!=null &&
+						dto.getPlot().equals(first)){ 
+					try {
+						runResult= convertor.convert(runResult);
+					} catch (ClassNotFoundException e) {
+						
+						e.printStackTrace();
+						throw new TMLException("No plot data convertor has been found");
+					} catch (ServiceConfigurationError e) {
+						
+						
+						e.printStackTrace();
+						throw new TMLException("There has been a problem with plot data conversion");
+					}	
+					return new ConsoleDTO(runResult
+							.substring(runResult.indexOf("\n")+1),true);
+				}
+				else{
+					ConsoleDTO c = new ConsoleDTO();
+					c.setContent(runResult);
+					c.setLineFeedback(TmlUtil.getErrorMap(runResult.split("\\n"), regex));
+					c.setPlot(false);
+					return c;
+				
+				}
 
 			} catch (IOException ex) {
 
@@ -114,36 +153,8 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 
 			}
 			
-
-			String first = runResult
-					.substring(0, runResult.indexOf("\n"));
-			if(dto.getPlot()!=null &&
-					first!=null &&
-					dto.getPlot().equals(first)){ 
-				try {
-					runResult= convertor.convert(runResult);
-				} catch (ClassNotFoundException e) {
-					
-					e.printStackTrace();
-					throw new TMLException("No plot data convertor has been found");
-				} catch (ServiceConfigurationError e) {
-					
-					
-					e.printStackTrace();
-					throw new TMLException("There has been a problem with plot data conversion");
-				}	
-				return new ConsoleDTO(runResult
-						.substring(runResult.indexOf("\n")+1),true);
-			}
-			else
-			{
-				ConsoleDTO c = new ConsoleDTO();
-				c.setContent(runResult);
-				c.setLineFeedback(TmlUtil.getErrorMap(runResult.split("\\n"), regex));
-				c.setPlot(false);
-			return c;
 			
-			}
+			
 		}else
 			throw new TMLException("A user directory to place the source and executable file can not be created");
 
@@ -186,7 +197,6 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	}
 	@Override
 	public LangParamDTO getLangParam() throws TMLException{
-
 
 		
 		
@@ -239,8 +249,16 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		*/
 		return dto;
 	}
-	
-	
+	@Override
+	public LangParamDTO getLangParamAddLang() throws TMLException{
+			
+			if(!getThreadLocalRequest().getRemoteAddr().
+					trim().equals("127.0.0.1"))
+				throw new TMLException("Access Denied");
+			return getLangParam();
+		
+		
+	}
 	
 
 	@Override

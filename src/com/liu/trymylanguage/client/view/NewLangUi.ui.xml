@@ -1,15 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:com.liu.trymylanguage.client.view">
 <ui:style>
 	.box{
 		background: white;
-		margin: 30px;
+		margin: 30px 30px 5px 30px;
 		padding: 20px;
 	
 	
 	}
 	.savebutton{
-		margin: 30px;
+		margin: 0 30px 30px 0;
+		
 		float: right;
 	}
 	.verticalpanel{
@@ -21,20 +24,18 @@
 	
 	}
 	
-	.warrning{
-		color: red;
 	
-	}
+	
 </ui:style>
 <g:ScrollPanel>
 <g:VerticalPanel styleName="{style.verticalpanel}">
 <g:HorizontalPanel>
 <g:HTMLPanel styleName="{style.box}">
-	<h1>Enter the specification of the language. 
-	<br />You can seperate entities with space.</h1>
-	<g:Label>Name:</g:Label>
+	<h1>Syntax Highlighting</h1>
+	<g:Label>Language Name:</g:Label>
 	<g:TextBox ui:field="nameTextBox"></g:TextBox>
-	<g:Label>Keywords:</g:Label>
+	<g:Label>List of space separated language keywords.
+	 These keywords are used for syntax highlighting.</g:Label>
 	<g:TextArea ui:field="keywordsTextArea" width="300px"></g:TextArea>
 	<g:Label>Character(s) for single line comment:</g:Label>
 	<g:TextBox ui:field="commentSingleTextBox"></g:TextBox>
@@ -46,7 +47,7 @@
 	<g:TextBox ui:field="stringCharTextBox"></g:TextBox>
 	<g:Label>Character for escaping string character within a string:</g:Label>
 	<g:TextBox ui:field="escapeCharTextBox"></g:TextBox>
-	<g:Label>Operator character(s):(do not seperate by space on this one)</g:Label>
+	<g:Label>Operator character(s):</g:Label>
 	<g:TextBox ui:field="operatorsTextBox"></g:TextBox>
 	
 </g:HTMLPanel>
@@ -58,25 +59,53 @@
 	<g:TextBox ui:field="timeoutTextBox"></g:TextBox>
 	<g:Label>File Suffix (e.g. .java .c .py.....) without the beginning dot:</g:Label>
 	<g:TextBox ui:field="suffixTextBox"></g:TextBox>
-	<p>You can use &lt;filename&gt; and &lt;suffix&gt; in the following 3 fields.
-	 For example the Compile command for java can be: javac &lt;filename&gt;.&lt;java&gt;
-	 assuming that you have java for in the suffix field</p>
+	
+	
 	<g:Label>Compile Command:</g:Label>
+	
 	<g:TextBox ui:field="compileTextBox"></g:TextBox>
+	<my:MoreInfoWidget>You can use &lt;filename&gt; and &lt;suffix&gt; in 
+	this fields to refer to name of the file and its suffix respectivly.
+	 For example the Compile command for java can be: 
+	 javac &lt;filename&gt;.&lt;suffix&gt;
+	 assuming that you have <i>java</i> for the suffix field
+	 </my:MoreInfoWidget>
+	
+	
 	<g:Label>Run Command:</g:Label>
 	<g:TextBox ui:field="runTextBox"></g:TextBox>
-	<g:Label>Regular Expression for Line Feedback:(e.g. use @ in your regex where you want to indicate the line number)</g:Label>
+	<my:MoreInfoWidget>You can use &lt;filename&gt; and &lt;suffix&gt; in 
+	this fields to refer to name of the file and its suffix respectivly.
+	 For example the Run command for java can be: 
+	 java &lt;filename&gt;
+	 </my:MoreInfoWidget>
+	
+	<g:Label>Regular Expression for Line Feedback:</g:Label> 
 	<g:TextBox ui:field="feedbackTextBox"></g:TextBox>
-	<g:Label>Plot Keyword: (e.g. If the output of the program starts with a line containing only the followig keyword, the rest of the output is treated as input data for plotting.)</g:Label>
+	<my:MoreInfoWidget>use @ in your regex where you want to indicate the line number
+	For more information on how to construct regular expresions, 
+	please refer to <a href="http://docs.oracle.com/javase/tutorial/essential/regex/" target="_blank">Java Tutorial on Regular Expressions</a> 
+	 </my:MoreInfoWidget>
+	
+	<g:Label>Plot Keyword:</g:Label>
 	<g:TextBox ui:field="plot"></g:TextBox>
-	<g:Label>Sample Program:</g:Label>
-	<g:TextArea ui:field="sampleProgram" width="400px" height="145px"></g:TextArea><br />
+	<my:MoreInfoWidget>If the output of your program starts with a line
+	 containing only the followig keyword, the rest of the output is treated
+	  as input data for plotting
+	  </my:MoreInfoWidget>
+	
+<!-- 	<g:Label>Sample Program:</g:Label> -->
+<!-- 	<g:TextArea ui:field="sampleProgram" width="400px" height="145px"></g:TextArea><br /> -->
 	
 </g:HTMLPanel>
 
 </g:HorizontalPanel>
-<g:Label styleName="{style.warrning}">Note: all fields are required</g:Label>
+<g:FlowPanel>
+
 <g:Button ui:field="saveButton" styleName="{style.savebutton}">Save</g:Button>
+<g:HTML styleName="error" ui:field="valMessage"></g:HTML>
+</g:FlowPanel>
+
 </g:VerticalPanel>
 </g:ScrollPanel>
 </ui:UiBinder> 

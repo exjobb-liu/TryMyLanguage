@@ -9,6 +9,9 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.liu.trymylanguage.client.ErrorDialog;
 import com.liu.trymylanguage.client.TMLService;
@@ -35,8 +38,8 @@ public class NewLangUi extends Composite {
 	@UiField TextBox feedbackTextBox;
 	@UiField TextBox suffixTextBox;
 	@UiField TextBox plot;
-	@UiField TextArea sampleProgram;
-	
+	//@UiField TextArea sampleProgram;
+	@UiField HTML valMessage;
 
 	private LangParamDTO dto;
 	private TMLServiceAsync service;
@@ -58,43 +61,66 @@ public class NewLangUi extends Composite {
 	void handleSaveClick(ClickEvent e){
 		if(dto==null)
 			dto = new LangParamDTO();
-		dto.setCommentMEnd(commentMEndTextBox.getText());
-		dto.setCommentMStart(commentMStartTextBox.getText());
-		dto.setCommentSingle(commentSingleTextBox.getText());
-		dto.setCompileCmd(compileTextBox.getText());
-		dto.setEscapeChar(escapeCharTextBox.getText());
-		dto.setFeedbackRegex(feedbackTextBox.getText());
-		dto.setKeywords(keywordsTextArea.getText());
-		dto.setName(nameTextBox.getText());
-		dto.setOperators(operatorsTextBox.getText());
-		dto.setPlot(plot.getText());
-		dto.setRunCmd(runTextBox.getText());
-		dto.setSampleProgram(sampleProgram.getText());
+		String errorMsg="";
 		
-		dto.setStringChar(stringCharTextBox.getText());
-		dto.setSuffix(suffixTextBox.getText());
-		dto.setTimeout(Long.parseLong(timeoutTextBox.getText().trim()));
-		
-		
-		service.saveLang(dto, new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				new ErrorDialog("An Error occured while saving langugage data: \n"
-						+caught.getMessage()).show();
-				
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				History.newItem("ide");
-				
-			}
-		});
-		
+		if(nameTextBox.getText()==null || nameTextBox.getText().trim().equals(""))
+			errorMsg+="Name field can not be empty<br />";
+		if(timeoutTextBox.getText()== null ||
+				timeoutTextBox.getText().trim().equals(""))
+			timeoutTextBox.setText("5000");
+		if(timeoutTextBox.getText()!=null &&
+				!timeoutTextBox.getText().matches("\\d*"))
+			errorMsg+="Timeout can only be an integer<br />";
+			
+		if(runTextBox.getText()==null || 
+				runTextBox.getText().trim().equals(""))
+			errorMsg+="Run command can not be empty<br />";
+		if(feedbackTextBox.getText()!=null  &&
+				!feedbackTextBox.getText().trim().equals("") &&
+				!feedbackTextBox.getText().contains("@"))
+			errorMsg+="Regular expression for line feedback should contain @<br />";
+		if(errorMsg.equals("")){
+			dto.setCommentMEnd(commentMEndTextBox.getText());
+			dto.setCommentMStart(commentMStartTextBox.getText());
+			dto.setCommentSingle(commentSingleTextBox.getText());
+			dto.setCompileCmd(compileTextBox.getText());
+			dto.setEscapeChar(escapeCharTextBox.getText());
+			dto.setFeedbackRegex(feedbackTextBox.getText());
+			dto.setKeywords(keywordsTextArea.getText());
+			dto.setName(nameTextBox.getText());
+			dto.setOperators(operatorsTextBox.getText());
+			dto.setPlot(plot.getText());
+			dto.setRunCmd(runTextBox.getText());
+	//		dto.setSampleProgram(sampleProgram.getText());
+			
+			dto.setStringChar(stringCharTextBox.getText());
+			dto.setSuffix(suffixTextBox.getText());
+			dto.setTimeout(Long.parseLong(timeoutTextBox.getText().trim()));
+			
+			
+			service.saveLang(dto, new AsyncCallback<Void>() {
+	
+				@Override
+				public void onFailure(Throwable caught) {
+					new ErrorDialog("An Error occured while saving langugage data: \n"
+							+caught.getMessage()).show();
+					
+				}
+	
+				@Override
+				public void onSuccess(Void result) {
+					History.newItem("ide");
+					
+				}
+			});
+		} else {
+			
+			valMessage.setHTML(errorMsg);
+			
+		}
 	}
 	private void loadConf(){
-		service.getLangParam(new AsyncCallback<LangParamDTO>() {
+		service.getLangParamAddLang(new AsyncCallback<LangParamDTO>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -120,7 +146,7 @@ public class NewLangUi extends Composite {
 					feedbackTextBox.setText(result.getFeedbackRegex());
 					suffixTextBox.setText(result.getSuffix());
 					plot.setText(result.getPlot());
-					sampleProgram.setText(result.getSampleProgram());
+//					sampleProgram.setText(result.getSampleProgram());
 					
 					
 				

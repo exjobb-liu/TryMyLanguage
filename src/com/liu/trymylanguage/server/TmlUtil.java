@@ -1,15 +1,20 @@
 package com.liu.trymylanguage.server;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.buildobjects.process.ExternalProcessFailureException;
 import org.buildobjects.process.ProcBuilder;
+import org.buildobjects.process.ProcResult;
 import org.buildobjects.process.StartupException;
 import org.buildobjects.process.TimeoutException;
 
@@ -69,7 +74,7 @@ public class TmlUtil {
 			long timeout, File dir) 
 					throws StartupException,TimeoutException,
 					ExternalProcessFailureException{
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		//ByteArrayOutputStream output = new ByteArrayOutputStream();
 		
 		
 		
@@ -85,20 +90,61 @@ public class TmlUtil {
 			ProcBuilder builder = new ProcBuilder(s[0])
 					.withWorkingDirectory(dir)
 					.withArgs(args)
-			        .withOutputStream(output)
+			       // .withOutputStream(output)
 			        .withTimeoutMillis(timeout);
 			
 			
 			
-			builder.run();
+			ProcResult result = builder.run();
 		
+			System.out.println(result.getExitValue());
+			//System.out.println(result.);
 			
 			
-			
-			
-			return output.toString();
+			return result.getOutputString();
 
 		}
+	
+	public List<String> run(String cmd, File dir, long timeout){
+		List<String> output= new ArrayList<String>();
+		
+		if(cmd==null || "".equals(cmd.trim()))
+			return output;
+		List<String> command = new ArrayList<String>();
+		String[] cmdArray = cmd.split("\\s");
+		for(int i=0;i<cmdArray.length;i++){
+			command.add(cmdArray[i]);
+			
+		}
+		
+		ProcessBuilder pb = new ProcessBuilder(command);
+		pb.redirectErrorStream(true);
+		pb.directory(dir);
+		
+		try {
+			Process p = pb.start();
+			p.waitFor();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+			String line = br.readLine();
+			
+			while(line!=null){
+				output.add(line);
+				line = br.readLine();
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return output;
+		
+		
+	}
 	
 	public static Map<Integer,Integer> getErrorMap(String[] lines,String regex){
 		Map<Integer,Integer> map = new HashMap<Integer,Integer>();

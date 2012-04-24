@@ -7,11 +7,14 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -42,10 +45,7 @@ public class TabWidget extends Composite {
 			
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				rename = new RenameDialog(title.getText());
-				rename.setPopupPosition(TabWidget.this.getAbsoluteLeft()
-						,TabWidget.this.getAbsoluteTop()+30);
-				rename.show();
+				showRenameDialog();
 				
 			}
 		});
@@ -69,6 +69,7 @@ public class TabWidget extends Composite {
 		private Button close;
 		private VerticalPanel mainPanel;
 		private FlowPanel buttonPanel;
+		private Label errorLabel;
 		public RenameDialog(String title){
 			
 			mainPanel = new VerticalPanel();
@@ -78,7 +79,10 @@ public class TabWidget extends Composite {
 			nameText.setText(title);
 			ok = new Button("Ok");
 			close = new Button("close");
-			
+			errorLabel = new Label("File name can only contain alpha-numeric" +
+					" characters");
+			errorLabel.setStyleName("error");
+			errorLabel.setVisible(false);
 			ok.addClickHandler(new ClickHandler() {
 				
 				@Override
@@ -100,6 +104,7 @@ public class TabWidget extends Composite {
 				
 				@Override
 				public void onKeyPress(KeyPressEvent event) {
+					
 					int keyCode = event.getUnicodeCharCode();
 				    if (keyCode == 0) {
 				        // Probably Firefox
@@ -109,13 +114,30 @@ public class TabWidget extends Composite {
 						
 						ok.click();
 					}
+				}
+			});
+			nameText.addKeyUpHandler(new KeyUpHandler() {
+				
+				@Override
+				public void onKeyUp(KeyUpEvent event) {
+					String t = nameText.getValue().trim();
+					
+					if(!t.matches("\\w+")){
+						errorLabel.setVisible(true);
+						ok.setEnabled(false);
+					}else{
+						errorLabel.setVisible(false);
+						ok.setEnabled(true);
 						
+							
+					}
 					
 				}
 			});
 			buttonPanel.add(ok);
 			buttonPanel.add(close);
 			mainPanel.add(nameText);
+			mainPanel.add(errorLabel);
 			mainPanel.add(buttonPanel);
 			
 			setWidget(mainPanel);
@@ -153,15 +175,15 @@ public class TabWidget extends Composite {
 				public void onClick(ClickEvent event) {
 				
 					//int index = parent.getSelectedIndex();
-					int index = parent.getWidgetIndex(widget);
-					try {
-						parent.selectTab(index+1);
-					} catch (AssertionError e) {
-						parent.selectTab(index-1);
-					}
+//					int index = parent.getWidgetIndex(widget);
+//					try {
+//						parent.selectTab(index+1);
+//					} catch (AssertionError e) {
+//						parent.selectTab(index-1);
+//					}
 					
 					parent.remove(widget);
-					 
+					parent.selectTab(parent.getWidgetCount()-1);
 				//	System.out.println(parent.getWidgetCount());
 				//	parent.selectTab(parent.getWidgetCount()-1);
 					if(parent.getWidgetCount()==1){
@@ -183,6 +205,14 @@ public class TabWidget extends Composite {
 		return isCloseable;
 	}
 	
-	
+	public void showRenameDialog(){
+		
+		rename = new RenameDialog(title.getText());
+		rename.setPopupPosition(TabWidget.this.getAbsoluteLeft()
+				,TabWidget.this.getAbsoluteTop()+30);
+		rename.show();
+		
+		
+	}
 	
 }

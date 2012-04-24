@@ -84,7 +84,7 @@ public class TMLServiceTest  {
     	dto.setCommentMEnd("*/");
     	dto.setCommentMStart("/*");
     	dto.setCommentSingle("//");
-    	dto.setCompileCmd("javac <filename>.<suffix>");
+    	dto.setCompileCmd("");
     	dto.setEscapeChar("\\");
     	dto.setFeedbackRegex("<filename>.<suffix>:@:");
     	dto.setKeywords("test class");
