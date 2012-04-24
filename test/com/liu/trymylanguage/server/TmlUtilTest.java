@@ -3,6 +3,7 @@ package com.liu.trymylanguage.server;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +54,17 @@ public class TmlUtilTest {
 	public void test_run(){
 		
 		TmlUtil tmlUtil = new TmlUtil();
-		List<String> l = tmlUtil.run(null, 
-				new File("/home/amir/Downloads/"),100);
+		List<String> l = null;
+		try {
+			l = tmlUtil.run("javac", 
+					new File("/home/amir/Downloads/"),1000);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (Iterator iterator = l.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
 			System.out.println(string);

@@ -105,7 +105,8 @@ public class TmlUtil {
 
 		}
 	
-	public List<String> run(String cmd, File dir, long timeout){
+	public List<String> run(String cmd, File dir, long timeout) 
+			throws IOException, InterruptedException{
 		List<String> output= new ArrayList<String>();
 		
 		if(cmd==null || "".equals(cmd.trim()))
@@ -121,10 +122,31 @@ public class TmlUtil {
 		pb.redirectErrorStream(true);
 		pb.directory(dir);
 		
-		try {
+		
 			Process p = pb.start();
-			p.waitFor();
-			
+			if(timeout<=0)
+				p.waitFor();
+			else {
+				
+
+			    long now = System.currentTimeMillis();
+			   
+			    long finish = now + timeout;
+			    while ( isAlive( p ) && ( System.currentTimeMillis() < finish ) )
+			    {
+			        Thread.sleep( 10 );
+			    }
+			    if ( isAlive( p ) )
+			    {
+			    	p.destroy();
+			        throw new InterruptedException( 
+			        		"Process timeout out after " + timeout + " milliseconds" );
+			    }
+			   
+			   
+				
+			}
+		
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));
 			String line = br.readLine();
@@ -134,13 +156,7 @@ public class TmlUtil {
 				line = br.readLine();
 			}
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 		return output;
 		
 		
@@ -178,5 +194,15 @@ public class TmlUtil {
 	    // The directory is now empty so delete it
 	    return dir.delete();
 	}
+	public static boolean isAlive( Process p ) {
+	    try
+	    {
+	        p.exitValue();
+	        return false;
+	    } catch (IllegalThreadStateException e) {
+	        return true;
+	    }
+	}
+
 
 }
