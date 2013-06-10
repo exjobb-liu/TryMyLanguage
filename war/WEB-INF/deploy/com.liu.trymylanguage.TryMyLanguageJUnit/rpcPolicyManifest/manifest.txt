@@ -1,2 +1,0 @@
-# Module com.liu.trymylanguage.TryMyLanguageJUnit
-# RPC service class, partial path of RPC policy file
