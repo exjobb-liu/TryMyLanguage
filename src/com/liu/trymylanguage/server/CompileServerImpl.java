@@ -37,8 +37,9 @@ public class CompileServerImpl {
 
 		this(PlotDataConvertorService.getInstance(),
 				new TmlUtil(),
-				new File(System.getProperty("catalina.base")+"/webapps/tml/"));
-
+				//new File(System.getProperty("catalina.base")+"/webapps/tml/"));
+				new File(System.getProperty("catalina.base")==null ?
+						"" : System.getProperty("catalina.base") + "/webapps/tml/"));
 
 
 	}
@@ -303,8 +304,11 @@ public class CompileServerImpl {
 				+"output-"+UUID.randomUUID().toString()+"/";
 		if((dir = new File(dirPath)).mkdir())
 			return dir;
-		else
+		else {
+			System.err.println("Directory can not be created: " + dirPath);
 			throw new TMLException("A user directory to place the source and executable file can not be created");
+		}
+			
 
 	}
 
