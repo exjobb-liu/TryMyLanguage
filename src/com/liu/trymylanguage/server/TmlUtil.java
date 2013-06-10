@@ -1,208 +1,324 @@
 package com.liu.trymylanguage.server;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
+
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.buildobjects.process.ExternalProcessFailureException;
-import org.buildobjects.process.ProcBuilder;
-import org.buildobjects.process.ProcResult;
-import org.buildobjects.process.StartupException;
-import org.buildobjects.process.TimeoutException;
+
+import com.liu.trymylanguage.shared.OutputDTO;
 
 
-import com.liu.trymylanguage.shared.LangParamDTO;
 
 public class TmlUtil {
 
-	
-	public static synchronized void saveLangToFile(LangParamDTO dto) throws IOException {
-		
 
-	}
+
 
 	
-	public static synchronized LangParamDTO getLangParamFromFile() throws IOException,
-			ClassNotFoundException {
-		
-		return null;
-	}
+//	public Process runCmd(String cmd, File dir, long timeout) 
+//			throws IOException, TimeoutException, InterruptedException{
+//		boolean hasOutput = false;
+//		if(cmd==null || "".equals(cmd.trim()))
+//			throw new IllegalArgumentException("Command can not be null or empty");
+//		List<String> command = new ArrayList<String>();
+//		String[] cmdArray = cmd.split("\\s");
+//		for(int i=0;i<cmdArray.length;i++){
+//			command.add(cmdArray[i]);
+//
+//		}
+//
+//		ProcessBuilder pb = new ProcessBuilder(command);
+//		
+//		
+//		pb.redirectErrorStream(true);
+//		pb.directory(dir);
+//
+//
+//		Process p = pb.start();
+//		Timer timer = null;
+//		InterruptTimerTask interrupter = null;
+//		
+////		BufferedInputStream inReader = null;
+////		BufferedReader bufReader =  null;
+////		BufferedWriter bufWriter = null;
+//		try {
+//			if(timeout>0){
+//				timer = new Timer(true);
+//				interrupter = 
+//					new InterruptTimerTask(Thread.currentThread());
+//				timer.schedule(interrupter, timeout);
+//			
+//				
+//			}
+////			
+////			inReader = new BufferedInputStream(
+////					new StreamGobbler(p.getInputStream()));
+////			byte buf[] = new byte[50];
+////			while((inReader.read(buf))>=0){
+////				hasOutput = true;
+////				out.write(buf);
+////				out.flush();
+////			}
+////			
+////			bufReader = new BufferedReader(
+////					new InputStreamReader(in));
+////			String line;
+////			if((line=bufReader.readLine())!=null){
+////				bufWriter = new BufferedWriter(
+////						new OutputStreamWriter(p.getOutputStream()));
+////				bufWriter.write(line);
+////				bufWriter.flush();
+////			}
+////				
+//			
+//			
+//
+//			p.waitFor();
+//		} catch (InterruptedException e) {
+//			p.destroy();
+//			if(interrupter.isTimedout)
+//				throw new TimeoutException("Timeout Exceeded");
+//			else{
+//				throw e;
+//			}
+//			
+//				
+//		}finally{
+//			if(timer!=null)
+//				timer.cancel();
+////			if(inReader!=null)
+////				inReader.close();
+////			if(bufReader!=null)
+////				bufReader.close();
+////			if(bufWriter!=null)
+////				bufWriter.close();
+//			Thread.interrupted();
+//			
+//		}
+//			
+//		return hasOutput;
+//		
+//		
+//		
+//
+//
+//	}
 
-	
-	public static String runCmdroot(String cmd, long timeout, File dir) throws IOException {
-	ByteArrayOutputStream output = new ByteArrayOutputStream();
-		
-		String[] s = cmd.split("\\s");
-		
-		String[] args = new String[s.length-1];
-		for (int i = 1; i < s.length; i++) {
-			args[i-1] = s[i];
-		}
-		
-		
-		ProcBuilder builder = new ProcBuilder(s[0])
-				.withWorkingDirectory(dir)
-				.withArgs(args)
-		        .withOutputStream(output)
-		        .withTimeoutMillis(timeout);
-		
-		
-		
-		String out = new String();
-		try {
-			
-			builder.run();
-		} catch (ExternalProcessFailureException e) {
-			
-			out = e.getStderr();
-			
-		}
-		        
-		out += output.toString();
-		return out;
-
-	}
-	public  String runCmd(String cmd, 
-			long timeout, File dir) 
-					throws StartupException,TimeoutException,
-					ExternalProcessFailureException{
-		//ByteArrayOutputStream output = new ByteArrayOutputStream();
-		
-		
-		
-			
-			String[] s = cmd.split("\\s");
-			String[] args = new String[s.length-1];
-			
-			for (int i = 1; i < s.length; i++) {
-				args[i-1] = s[i];
-			}
-			
-			
-			ProcBuilder builder = new ProcBuilder(s[0])
-					.withWorkingDirectory(dir)
-					.withArgs(args)
-			       // .withOutputStream(output)
-			        .withTimeoutMillis(timeout);
-			
-			
-			
-			ProcResult result = builder.run();
-		
-			System.out.println(result.getExitValue());
-			//System.out.println(result.);
-			
-			
-			return result.getOutputString();
-
-		}
-	
-	public List<String> run(String cmd, File dir, long timeout) 
-			throws IOException, InterruptedException{
-		List<String> output= new ArrayList<String>();
+	public Process runCmd(String cmd,File dir) throws IOException{
 		
 		if(cmd==null || "".equals(cmd.trim()))
-			return output;
+			throw new IllegalArgumentException("Command can not be null or empty");
 		List<String> command = new ArrayList<String>();
 		String[] cmdArray = cmd.split("\\s");
 		for(int i=0;i<cmdArray.length;i++){
 			command.add(cmdArray[i]);
-			
+
 		}
-		
+
 		ProcessBuilder pb = new ProcessBuilder(command);
+		
+		
 		pb.redirectErrorStream(true);
 		pb.directory(dir);
-		
-		
-			Process p = pb.start();
-			if(timeout<=0)
-				p.waitFor();
-			else {
-				
 
-			    long now = System.currentTimeMillis();
-			   
-			    long finish = now + timeout;
-			    while ( isAlive( p ) && ( System.currentTimeMillis() < finish ) )
-			    {
-			        Thread.sleep( 10 );
-			    }
-			    if ( isAlive( p ) )
-			    {
-			    	p.destroy();
-			        throw new InterruptedException( 
-			        		"Process timeout out after " + timeout + " milliseconds" );
-			    }
-			   
-			   
-				
-			}
+
+		return pb.start();
 		
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			String line = br.readLine();
-			
-			while(line!=null){
-				output.add(line);
-				line = br.readLine();
-			}
-			
+	} 
 	
-		return output;
-		
-		
-	}
-	
-	public static Map<Integer,Integer> getErrorMap(String[] lines,String regex){
-		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
-		
-		
-		Pattern pattern = Pattern.compile(regex);
-		for (int i = 0; i < lines.length; i++) {
-			Matcher matcher = pattern.matcher(lines[i]);
-			if(matcher.find()){
-				map.put(i+1,Integer.parseInt(matcher.group(1)));
-			}
-			
-			
+	public static List<OutputDTO> getErrorMap(String lines,String regex) 
+			throws NumberFormatException{
+		List<OutputDTO> out = new ArrayList<OutputDTO>();
+		if(lines == null){
+
+			return out;
 		}
-		
-		return map;
+		if(regex ==null || regex.equals("")){
+			out.add(new OutputDTO(0,lines));
+			return out;
+		}
+
+		//Determining the group number of @ by counting the number of none-escaped '(' 
+		// characters before it.
+		String substr = regex.substring(0,
+				regex.indexOf('@'));
+
+		Pattern p = Pattern.compile("(?:^\\(|[(]++)");
+		Matcher m = p.matcher(substr);
+		int atgrpn=0;
+
+		while(m.find())
+			atgrpn++;
+
+
+
+
+
+		regex = regex.replace("@", "(\\d+?)");
+		Pattern pattern = Pattern.compile(regex);
+
+
+
+		//fora (int i = 0; i < lines.length; i++) {
+
+		Matcher matcher = pattern.matcher(lines);
+
+		int start = 0;
+		while (matcher.find()) {
+			String line = lines.substring(start, matcher.start());
+			if(!line.equals(""))
+				out.add(new OutputDTO(0,line));
+			line = matcher.group();
+			if(!line.equals(""))
+				out.add(new OutputDTO(Integer.parseInt(matcher.group(atgrpn+1)),
+						line));
+
+			start = matcher.end();
+		}
+		if(start<lines.length() && !lines.substring(start).equals(""))
+			out.add(new OutputDTO(0,lines.substring(start)));
+
+
+
+
+
+
+		return out;
 	}
 
+	public static String formatResult(String lines,ErrorRegex regex) 
+			throws NumberFormatException{
+		
+		if(lines == null){
+
+			return "";
+		}
+		if(regex ==null || regex.getRegex() == null ||regex.getRegex().equals("")){
+			
+			return lines;
+		}
+		StringBuilder out = new StringBuilder();
+	
+		Pattern pattern = Pattern.compile(regex.getRegex());
+
+
+
+		
+
+		Matcher matcher = pattern.matcher(lines);
+
+		int start = 0;
+		while (matcher.find()) {
+			String line = lines.substring(start, matcher.start());
+			if(!line.equals(""))
+				out.append(line);
+			line = matcher.group();
+			if(!line.equals("")){
+				out.append("<span class='lineFeedback' onclick='selectLine(event)' id='");
+				out.append(matcher.group(regex.getGroup()+1));
+				out.append("'>");
+				out.append(line);
+				out.append("</span>");
+			}
+			start = matcher.end();
+		}
+		if(start<lines.length() && !lines.substring(start).equals(""))
+			out.append(lines.substring(start));
+
+		return out.toString();
+	}
+
+	
 	
 	public static boolean deleteDir(File dir) {
-	    if (dir.isDirectory()) {
-	        String[] children = dir.list();
-	        for (int i=0; i<children.length; i++) {
-	            boolean success = deleteDir(new File(dir, children[i]));
-	            if (!success) {
-	                return false;
-	            }
-	        }
-	    }
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i=0; i<children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
 
-	    // The directory is now empty so delete it
-	    return dir.delete();
+		// The directory is now empty so delete it
+		return dir.delete();
 	}
 	public static boolean isAlive( Process p ) {
-	    try
-	    {
-	        p.exitValue();
-	        return false;
-	    } catch (IllegalThreadStateException e) {
-	        return true;
-	    }
+		try
+		{
+			p.exitValue();
+			return false;
+		} catch (IllegalThreadStateException e) {
+			return true;
+		}
 	}
 
+	public static String htmlEscape(String s) {
+
+		StringBuilder builder = new StringBuilder();
+		boolean previousWasASpace = false;
+		for( char c : s.toCharArray() ) {
+			if( c == ' ' ) {
+				if( previousWasASpace ) {
+					builder.append("&nbsp;");
+					previousWasASpace = false;
+					continue;
+				}
+				previousWasASpace = true;
+			} else {
+				previousWasASpace = false;
+			}
+			switch(c) {
+			case '<': builder.append("&lt;"); break;
+			case '>': builder.append("&gt;"); break;
+			case '&': builder.append("&amp;"); break;
+			case '"': builder.append("&quot;"); break;
+			case '\n': builder.append("<br />"); break;
+			// We need Tab support here, because we print StackTraces as HTML
+			case '\t': builder.append("&nbsp; &nbsp; &nbsp;"); break;  
+			default:
+				if( c < 128 ) {
+					builder.append(c);
+				} else {
+					builder.append("&#").append((int)c).append(";");
+				}    
+			}
+		}
+		return builder.toString();
+	}
+
+	class InterruptTimerTask
+	extends TimerTask
+	{
+		private boolean isTimedout; 
+		private Thread thread;
+
+		public InterruptTimerTask(Thread t)
+		{
+			isTimedout = false;
+			this.thread = t;
+		}
+
+		public void run()
+		{
+			thread.interrupt();
+			isTimedout = true;
+		}
+		public boolean isTimedout(){
+			return isTimedout;
+		}
+		
+
+	}
+	
+	
+	
 
 }

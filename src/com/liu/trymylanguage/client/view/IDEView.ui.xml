@@ -38,7 +38,11 @@
 			margin: 5px 20px 10px 5px;
 			border-bottom: solid 2px #BBC1BF;
 		}
-		
+		.editorPanel {
+	
+			padding-bottom: 5px;
+			
+		}
 		
 	</ui:style>
 	<g:SimpleLayoutPanel styleName="{style.background}">
@@ -56,10 +60,13 @@
 							<g:Button ui:field="runButton">Run</g:Button>
 							<g:Button ui:field="newTabButton">New Tab</g:Button>
 							<g:Button ui:field="renameButton">Rename</g:Button>
-						</g:HorizontalPanel>
+							<g:CheckBox ui:field="plotCheckBox">Draw Plot</g:CheckBox>
+							
+						</g:HorizontalPanel>  
 						</g:layer>
-						<g:layer top="35px" bottom="0px">
-						<g:TabLayoutPanel ui:field="tabPanel" barHeight="31"  height="100%">
+						<g:layer top="35px" bottom="0px"  >
+						<g:TabLayoutPanel ui:field="tabPanel" barHeight="31"  
+							 height="98%">
 							
 						</g:TabLayoutPanel>
 						</g:layer>
@@ -68,10 +75,10 @@
 				</g:north>
 				<g:center>
 					
-					<g:SimplePanel ui:field="consoleArea" styleName="{style.console}" >
+					<g:ScrollPanel ui:field="consoleArea" styleName="{style.console}" >
 						
 					
-					</g:SimplePanel>
+					</g:ScrollPanel>
 				
 				</g:center>
 			</g:SplitLayoutPanel>

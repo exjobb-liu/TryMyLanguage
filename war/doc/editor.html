@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>editor</title>
+	<link type="text/css" rel="stylesheet" href="style.css" />
+ 
+<script type="text/javascript">
+									function f(){
+									
+										var v = document.getElementById("code");
+										parent.copyCode(v.innerHTML);
+										
+									}
+								
+								</script>
+
+</head>
+
+<body>
+<h3>Editor Panel</h3>
+
+<div style="text-align: justify;">
+<p>At the top-middle of page the Editor is located. Editor section is
+the place that you write your code within and practice programming. 
+Here is a sample code that you can copy to the editor by clicking on the >> button:
+<pre class="code" id="code">
+public class HelloWorld{
+ public static void main(String[] argsv) {
+  System.out.println("Hello World");
+ }
+}
+</pre>
+<button onclick="f()">>></button><br />
+ Look again at top-left of the screen. you will see &#8220;New Tab&#8221; button. You can add
+as many as independents tab you want and easily switch between them.
+Each tab can be used to write a separate program. You can change the
+&#8220;default&#8221; tab name to an arbitrary one by click on tab itself. This
+name will use as the file name when you try to save the code.
+</p>
+</div>
+
+<div>
+<a href="start.html">Previous</a>
+<a href="index.html">Up</a>
+<a href="console.html">Next</a>
+</div>
+
+</body></html>

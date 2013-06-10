@@ -1,7 +1,9 @@
 package com.liu.trymylanguage.client.view;
 
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -9,9 +11,8 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.liu.trymylanguage.client.ErrorDialog;
 import com.liu.trymylanguage.client.TMLService;
@@ -37,8 +38,6 @@ public class NewLangUi extends Composite {
 	@UiField TextBox runTextBox;
 	@UiField TextBox feedbackTextBox;
 	@UiField TextBox suffixTextBox;
-	@UiField TextBox plot;
-	//@UiField TextArea sampleProgram;
 	@UiField HTML valMessage;
 
 	private LangParamDTO dto;
@@ -56,7 +55,8 @@ public class NewLangUi extends Composite {
 		
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
+	
+		
 	@UiHandler("saveButton")
 	void handleSaveClick(ClickEvent e){
 		if(dto==null)
@@ -67,11 +67,8 @@ public class NewLangUi extends Composite {
 			errorMsg+="Name field can not be empty<br />";
 		if(timeoutTextBox.getText()== null ||
 				timeoutTextBox.getText().trim().equals(""))
-			timeoutTextBox.setText("5000");
-		if(timeoutTextBox.getText()!=null &&
-				!timeoutTextBox.getText().matches("\\d*"))
-			errorMsg+="Timeout can only be an integer<br />";
-			
+			timeoutTextBox.setText("0");
+		
 		if(runTextBox.getText()==null || 
 				runTextBox.getText().trim().equals(""))
 			errorMsg+="Run command can not be empty<br />";
@@ -79,6 +76,20 @@ public class NewLangUi extends Composite {
 				!feedbackTextBox.getText().trim().equals("") &&
 				!feedbackTextBox.getText().contains("@"))
 			errorMsg+="Regular expression for line feedback should contain @<br />";
+		if(feedbackTextBox.getText()!=null && 
+				feedbackTextBox.getText().trim().equals("@"))
+			errorMsg+="Regular expression for line feedback should be more specific<br />";
+		if(commentMStartTextBox.getText()
+				.trim().equals(commentMEndTextBox.getText().trim()))
+			errorMsg+="Characters for starting and ending comments can not be the same<br />";
+		try {
+			Long.parseLong(timeoutTextBox.getText().trim());
+		} catch (NumberFormatException e2) {
+			errorMsg+="Only long integers are allowed for timeout";
+		}
+		
+		
+		
 		if(errorMsg.equals("")){
 			dto.setCommentMEnd(commentMEndTextBox.getText());
 			dto.setCommentMStart(commentMStartTextBox.getText());
@@ -89,10 +100,7 @@ public class NewLangUi extends Composite {
 			dto.setKeywords(keywordsTextArea.getText());
 			dto.setName(nameTextBox.getText());
 			dto.setOperators(operatorsTextBox.getText());
-			dto.setPlot(plot.getText());
 			dto.setRunCmd(runTextBox.getText());
-	//		dto.setSampleProgram(sampleProgram.getText());
-			
 			dto.setStringChar(stringCharTextBox.getText());
 			dto.setSuffix(suffixTextBox.getText());
 			dto.setTimeout(Long.parseLong(timeoutTextBox.getText().trim()));
@@ -102,8 +110,7 @@ public class NewLangUi extends Composite {
 	
 				@Override
 				public void onFailure(Throwable caught) {
-					new ErrorDialog("An Error occured while saving langugage data: \n"
-							+caught.getMessage()).show();
+					new ErrorDialog(caught).show();
 					
 				}
 	
@@ -124,8 +131,27 @@ public class NewLangUi extends Composite {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				if(!(caught instanceof LangNotFoundException))
-					new ErrorDialog(caught.getMessage()).show();
+				if(caught.getMessage().equals("Access Denied")){
+					DialogBox dialog = new DialogBox();
+					dialog.setHTML("<h3 style=\"color:red\">Access Denied</h3>");
+					dialog.setGlassEnabled(true);
+					Button backBtn = new Button("Back");
+					backBtn.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent event) {
+							History.newItem("ide");
+							
+						}
+					});
+					dialog.setAutoHideOnHistoryEventsEnabled(true);
+					dialog.setModal(true);
+					dialog.setWidget(backBtn);
+					dialog.center();
+					dialog.show();
+				}else if(!(caught instanceof LangNotFoundException))
+					 new ErrorDialog(caught).show();
+					
 				
 			}
 
@@ -145,9 +171,6 @@ public class NewLangUi extends Composite {
 					runTextBox.setText(result.getRunCmd());
 					feedbackTextBox.setText(result.getFeedbackRegex());
 					suffixTextBox.setText(result.getSuffix());
-					plot.setText(result.getPlot());
-//					sampleProgram.setText(result.getSampleProgram());
-					
 					
 				
 				}

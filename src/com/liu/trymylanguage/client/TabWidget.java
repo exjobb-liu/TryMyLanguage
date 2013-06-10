@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -88,6 +87,7 @@ public class TabWidget extends Composite {
 				@Override
 				public void onClick(ClickEvent event) {
 					TabWidget.this.title.setText(nameText.getText());
+					
 					hide();
 					
 				}
@@ -120,7 +120,7 @@ public class TabWidget extends Composite {
 				
 				@Override
 				public void onKeyUp(KeyUpEvent event) {
-					String t = nameText.getValue().trim();
+					String t = nameText.getValue();
 					
 					if(!t.matches("\\w+")){
 						errorLabel.setVisible(true);

@@ -1,5 +1,7 @@
 package com.liu.trymylanguage.shared;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,12 +27,21 @@ public class ConsoleDTO implements java.io.Serializable {
      * Describe isTerminated here.
      */
     
-    private Map<Integer,Integer> lineFeedback;
+    private Map<RegexPos,Integer> lineFeedback;
+    private List<OutputDTO> consoleContent;
     
     private boolean isPlot;
-
+    public ConsoleDTO(){
+    	consoleContent= new ArrayList<OutputDTO>();
+    	isPlot= false;
+    	
+    }
   
-	public ConsoleDTO(){}
+	public ConsoleDTO(List<OutputDTO> output){
+		
+		this.consoleContent = output;
+		isPlot = false;
+	}
     public ConsoleDTO(String content, boolean isPlot){
     	this.content=content;
     	
@@ -47,10 +58,13 @@ public class ConsoleDTO implements java.io.Serializable {
     	return content;
     }
 
-    public Map<Integer, Integer> getLineFeedback() {
+    public List<OutputDTO> getConsoleContent() {
+		return consoleContent;
+	}
+	public Map<RegexPos, Integer> getLineFeedback() {
 		return lineFeedback;
 	}
-	public void setLineFeedback(Map<Integer, Integer> lineFeedback) {
+	public void setLineFeedback(Map<RegexPos, Integer> lineFeedback) {
 		this.lineFeedback = lineFeedback;
 	}
 	/**
@@ -58,14 +72,14 @@ public class ConsoleDTO implements java.io.Serializable {
      *
      * @param newContent The new Content value.
      */
-    public void setContent(String newContent) {
+    /*public void setContent(String newContent) {
 	this.content = newContent;
-    }
+    }*/
     public boolean isPlot() {
   		return isPlot;
   	}
-  	public void setPlot(boolean isPlot) {
+  	/*public void setPlot(boolean isPlot) {
   		this.isPlot = isPlot;
-  	}
+  	}*/
    
 }

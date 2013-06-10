@@ -21,7 +21,7 @@ public class LangParamDTO implements Serializable {
 	private String runCmd; 
 	private long timeout; 
 	private String suffix;
-	private String plot;
+	private boolean plot;
 	private boolean isSandboxed;
 	
 	
@@ -40,12 +40,7 @@ public class LangParamDTO implements Serializable {
 	private String sampleProgram;
 
 	
-	public String getPlot() {
-		return plot;
-	}
-	public void setPlot(String plot) {
-		this.plot = plot;
-	}
+	
 	public String getSuffix() {
 		return suffix;
 	}
@@ -267,6 +262,12 @@ public class LangParamDTO implements Serializable {
 	public void setTimeout(long timeout)
 	{
 		this.timeout = timeout;
+	}
+	public boolean isPlot() {
+		return plot;
+	}
+	public void setPlot(boolean plot) {
+		this.plot = plot;
 	}
 
 }

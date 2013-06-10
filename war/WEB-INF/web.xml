@@ -24,6 +24,18 @@
     <servlet-name>TMLServiceImpl</servlet-name>
     <url-pattern>/trymylanguage/tmlservice</url-pattern>
   </servlet-mapping>
+  
+  <!-- the comet servlet for streaming messages to the client -->
+    <servlet>
+        <servlet-name>tmlComet</servlet-name>
+        <servlet-class>net.zschech.gwt.comet.server.CometServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>tmlComet</servlet-name>
+       <url-pattern>/trymylanguage/comet</url-pattern>
+    </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>TryMyLanguage.html</welcome-file>

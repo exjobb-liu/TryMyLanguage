@@ -1,0 +1,17 @@
+gwt-unitCache
+.exrc
+.gwt
+.idea
+langparam.bin
+output
+.settings
+TryMyLanguage.iml
+TryMyLanguage_kdm.xmi
+uml2
+reports
+war/com.liu.trymylanguage.TryMyLanguageJUnit
+war/trymylanguage
+war/WEB-INF/classes
+war/WEB-INF/deploy
+*.class
+war/webapps

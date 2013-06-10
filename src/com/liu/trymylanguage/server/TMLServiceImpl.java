@@ -1,7 +1,9 @@
 package com.liu.trymylanguage.server;
 
 
-import java.util.ServiceConfigurationError;
+
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -15,9 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.ObjectInput;
@@ -25,138 +24,173 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import com.liu.trymylanguage.shared.ConsoleDTO;
+import javax.servlet.http.HttpSession;
+
+import net.zschech.gwt.comet.server.CometServlet;
+import net.zschech.gwt.comet.server.CometSession;
+
 import com.liu.trymylanguage.shared.CodeDTO;
 import com.liu.trymylanguage.shared.LangParamDTO;
 
 
 
-import org.buildobjects.process.ExternalProcessFailureException;
-import org.buildobjects.process.StartupException;
-import org.buildobjects.process.TimeoutException;
 
-public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
+
+public class TMLServiceImpl extends RemoteServiceServlet 
+				implements TMLService {
 	/**
 	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private PlotDataConvertorService convertor;
-	private TmlUtil tmlUtil;
+		 */
+    private static final long serialVersionUID = 1L;
+	
+	private CompileServerImpl server;
+	private final File tmldir;
+	private CometSession cometSession;
+	
 	public TMLServiceImpl(){
-		convertor = PlotDataConvertorService.getInstance();
-		tmlUtil = new TmlUtil();
+		
+		this(new File(System.getProperty("catalina.base")+"/webapps/tml/"));
+		
 		
 	}
 	
-	public ConsoleDTO compile(CodeDTO code) throws TMLException {
-
-		LangParamDTO dto = getLangParam();
+	public TMLServiceImpl(File tmldir){
 	
-		String regex = dto.getFeedbackRegex().replaceAll("@", "(\\\\d+?)");
-		regex = regex.replaceAll("<filename>",code.getFileName());
-		regex = regex.replaceAll("<suffix>",dto.getSuffix());
+		
+		this.server = new CompileServerImpl();
+		this.tmldir= tmldir;
 		
 		
 		
-		String runResult = "";
+	}
+	
+	
+	public void compile(CodeDTO code) throws TMLException {
+		 
 		
-		BufferedWriter bfw = null;
 		
-		String dirPath = "output-"+Thread.currentThread().getId()+"/";
-		File dir=null;
-		if((dir = new File("webapps/tml/output/"+dirPath)).mkdir()){
-			try {
-
-				File file = new File("webapps/tml/output/"+dirPath+code.getFileName()+"."+dto.getSuffix());
-				dir = new File("webapps/tml/output/"+dirPath);
-				bfw = new BufferedWriter(new FileWriter(file));
-				bfw.write(code.getCode());
-				bfw.flush();
-
-				if (bfw !=null) {
-					bfw.close();		
-				}
-
-				if(dto.getCompileCmd()!=null && !dto.getCompileCmd().trim().equals("")){
-					
-					String ccmd = dto.getCompileCmd().replaceAll("<filename>",code.getFileName());
-					ccmd = ccmd.replaceAll("<suffix>", dto.getSuffix());	
-					
-					tmlUtil.runCmd(ccmd,dto.getTimeout(),dir);
-					//System.out.println(compileResult);
-					
-				}
-				String rcmd = dto.getRunCmd().replaceAll("<filename>",
-						code.getFileName());
-				rcmd = rcmd.replaceAll("<suffix>", dto.getSuffix());
-				
-				
-				
-				runResult =tmlUtil.runCmd(rcmd,dto.getTimeout(),dir);
-				System.out.println(rcmd);
-				System.out.println(runResult);
-				
-				String first = null;
-				
-				if(runResult.indexOf("\n")==-1){
-					first = runResult;
-				}else
-					first = runResult
-						.substring(0, runResult.indexOf("\n"));
-				
-				if(dto.getPlot()!=null &&
-						first!=null &&
-						dto.getPlot().equals(first)){ 
-					try {
-						runResult= convertor.convert(runResult);
-					} catch (ClassNotFoundException e) {
-						
-						e.printStackTrace();
-						throw new TMLException("No plot data convertor has been found");
-					} catch (ServiceConfigurationError e) {
-						
-						
-						e.printStackTrace();
-						throw new TMLException("There has been a problem with plot data conversion");
-					}	
-					return new ConsoleDTO(runResult
-							.substring(runResult.indexOf("\n")+1),true);
-				}
-				else{
-					ConsoleDTO c = new ConsoleDTO();
-					c.setContent(runResult);
-					c.setLineFeedback(TmlUtil.getErrorMap(runResult.split("\\n"), regex));
-					c.setPlot(false);
-					return c;
-				
-				}
-
-			} catch (IOException ex) {
-
-				ex.printStackTrace();
-				throw new TMLException(ex.getMessage());
-			
-			}catch (TimeoutException e) {
-				e.printStackTrace();
-				throw new TMLException("Execution of the program has been timed out");
-			}catch (StartupException e) {
-				e.printStackTrace();
-				throw new TMLException(e.getMessage());
-			}catch (ExternalProcessFailureException e) {
-				ConsoleDTO c = new ConsoleDTO();
-				c.setContent(e.getStderr());
-				c.setLineFeedback(TmlUtil.getErrorMap(e.getStderr().split("\\n"), regex));
-				return c;
-			}finally{
-				
-				TmlUtil.deleteDir(new File("webapps/tml/output/"+dirPath));
-
-			}
-			
-			
-			
-		}else
-			throw new TMLException("A user directory to place the source and executable file can not be created");
+		HttpSession httpSession = getThreadLocalRequest().getSession();
+		cometSession = CometServlet.getCometSession(httpSession, false);
+	         if (cometSession == null) {
+	                 cometSession = CometServlet.getCometSession(httpSession);
+	      
+	         }
+		
+		//String regex = dto.getFeedbackRegex();
+		//regex = regex.replaceAll("<filename>",code.getFileName());
+		//regex = regex.replaceAll("<suffix>",dto.getSuffix());
+		
+		
+		server.compile(code, cometSession);
+//		String runResult = "";
+//		
+//		BufferedWriter bfw = null;
+//		
+//		String dirPath = "output-"+Thread.currentThread().getId()+"/";
+//		File dir=null;
+//		
+//		if((dir = new File(tmldir.getAbsolutePath()+"/output/"+dirPath)).mkdir()){
+//			try {
+//
+//				File file = new File(tmldir.getAbsolutePath()+"/output/"+dirPath+code.getFileName()+"."+code.getSuffix());
+//				dir = new File(tmldir.getAbsolutePath()+"/output/"+dirPath);
+//				bfw = new BufferedWriter(new FileWriter(file));
+//				bfw.write(code.getCode());
+//				bfw.flush();
+//
+//				if (bfw !=null)
+//					bfw.close();		
+//				
+//
+//				if(code.getCompileCmd()!=null && 
+//						!code.getCompileCmd().trim().equals("")){
+//					
+//					
+//					runResult+=tmlUtil.runCmd(code.getCompileCmd(),dir,code.getTimeout());
+//					//System.out.println(runResult);
+//					
+//				}
+//				String rcmd = code.getRunCmd().replaceAll("<filename>",
+//						code.getFileName());
+//				rcmd = rcmd.replaceAll("<suffix>", code.getSuffix());
+//				
+//				//Here we assume that if the compiler process runs 
+//				//successfully, it gives no output and then if it 
+//				//has output, the run command will not be executed
+//				if(runResult.trim().equals(""))
+//					runResult+=tmlUtil.runCmd(rcmd,dir,code.getTimeout());
+//				//System.out.println(rcmd);
+//				//System.out.println(runResult);
+//				
+//				String first = null;
+//				
+//				if(runResult.indexOf("\n")!=-1){
+//					first = runResult
+//						.substring(0, runResult.indexOf("\n"));
+//					
+//				}
+//				if(code.getPlot()!=null &&
+//						first!=null &&
+//						code.getPlot().equals(first)){ 
+//					try {
+//						runResult= convertor.convert(runResult
+//								.substring(runResult.indexOf("\n")+1));
+//					} catch (ClassNotFoundException e) {
+//						
+//						e.printStackTrace();
+//						throw new TMLException("No plot data convertor has been found");
+//					} catch (ServiceConfigurationError e) {
+//						
+//						
+//						e.printStackTrace();
+//						throw new TMLException("There has been a problem with plot data conversion");
+//					}	
+//					//System.out.println(runResult);
+//					return new ConsoleDTO(runResult,true);
+//				}
+//				else{
+//					String result;
+//					try{
+//						result = TmlUtil.formatResult(runResult, code.getRegex());
+//					}catch(NumberFormatException ex){
+//						throw new TMLException("The @ in the Regular expression doesn't match a number");
+//						
+//					}
+//					
+//					ConsoleDTO c = new ConsoleDTO(result,false);
+//					
+//					//c.setContent(runResult);
+//					//c.setLineFeedback(TmlUtil.getErrorMap(runResult, regex));
+//					
+//					return c;
+//				
+//				}
+//
+//			} catch (IOException ex) {
+//
+//				ex.printStackTrace();
+//				throw new TMLException(ex.getMessage());
+//			
+//			}catch (InterruptedException e) {
+//				e.printStackTrace();
+//				
+//				throw new TMLException(e.getMessage());
+//				
+//			
+//			} catch (TimeoutException e) {
+//				
+//				e.printStackTrace();
+//				throw new TMLException(e.getMessage());
+//			}finally{
+//				
+//				TmlUtil.deleteDir(new File(tmldir.getAbsolutePath()+"/output/"+dirPath));
+//
+//			}
+//			
+//			
+//			
+//		}else
+//			throw new TMLException("A user directory to place the source and executable file can not be created");
 
 	} 
 	
@@ -176,9 +210,10 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 		
 		try {
 			
-			
+			Pattern.compile(dto.getFeedbackRegex().replace("@", "(\\d+?)"));
 			ObjectOutput output = new ObjectOutputStream(
-					new FileOutputStream("webapps/tml/langparam.bin"));
+					new FileOutputStream(
+							tmldir.getAbsolutePath()+"/langparam.bin",false));
 			
 			
 			output.writeObject(dto);
@@ -192,6 +227,8 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			e.printStackTrace();
 			throw new TMLException("Can not save the language configuration: \n"
 					+e.getMessage());
+		} catch (PatternSyntaxException e ){
+			throw new TMLException("Syntax error in regular expression for line feedback");
 		}
 		
 	}
@@ -204,10 +241,12 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 			LangParamDTO dto;
 			try {
 				obj = new ObjectInputStream(new BufferedInputStream(
-						new FileInputStream("webapps/tml/langparam.bin")));
-				 dto = (LangParamDTO)obj.readObject();
+						new FileInputStream(tmldir.getAbsolutePath()+"/langparam.bin")));
+				
+				dto = (LangParamDTO)obj.readObject();
 				 if(dto==null)
 					 throw new LangNotFoundException();
+				 obj.close();
 			} catch (FileNotFoundException e) {
 				
 				e.printStackTrace();
@@ -252,34 +291,42 @@ public class TMLServiceImpl extends RemoteServiceServlet implements TMLService {
 	@Override
 	public LangParamDTO getLangParamAddLang() throws TMLException{
 			
-			if(!getThreadLocalRequest().getRemoteAddr().
-					trim().equals("127.0.0.1"))
+			if(getThreadLocalRequest().getRemoteAddr().
+					trim().equals("127.0.0.1") ||
+					getThreadLocalRequest().getRemoteAddr().
+					trim().equals("0:0:0:0:0:0:0:1"))
+				
+				return getLangParam();
+			else
 				throw new TMLException("Access Denied");
-			return getLangParam();
 		
 		
+	}
+
+	@Override
+	public void InvalidateCometSession() {
+		if (cometSession != null && cometSession.isValid()) {
+			
+			cometSession.invalidate();
+		}
+			
 	}
 	
 
-	@Override
-	public boolean isConfigured() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
-
-	@Override
-	public String getPlotData(String data) throws TMLException {
-		// TODO Auto-generated method stub
-		String out= null;
-		try {
-			out = convertor.convert(data);
-		} catch (ClassNotFoundException e) {
-			throw new TMLException("No plot data convertor has been found: \n"+e.getMessage());
-		}
-		return out;
-	}
-
+//	@Override
+//	public String getPlotData(String data) throws TMLException {
+//		// TODO Auto-generated method stub
+//		String out= null;
+//		try {
+//			out = convertor.convert(data);
+//		} catch (ClassNotFoundException e) {
+//			throw new TMLException("No plot data convertor has been found: \n"+e.getMessage());
+//		}
+//		return out;
+//	}
+//
 
 	
 	

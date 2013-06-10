@@ -46,7 +46,7 @@
 	<g:Label>Character(s) for specifing the start and end of an string:</g:Label>
 	<g:TextBox ui:field="stringCharTextBox"></g:TextBox>
 	<g:Label>Character for escaping string character within a string:</g:Label>
-	<g:TextBox ui:field="escapeCharTextBox"></g:TextBox>
+	<g:TextBox ui:field="escapeCharTextBox" maxLength="1"></g:TextBox>
 	<g:Label>Operator character(s):</g:Label>
 	<g:TextBox ui:field="operatorsTextBox"></g:TextBox>
 	
@@ -57,6 +57,8 @@
 	
 	<g:Label>Compilation and Execution Timeout (in milliseconds):</g:Label>
 	<g:TextBox ui:field="timeoutTextBox"></g:TextBox>
+	<my:MoreInfoWidget>Zero and negetive numbers are considered as no limit on execution time.
+	 (the default value is zero)</my:MoreInfoWidget>
 	<g:Label>File Suffix (e.g. .java .c .py.....) without the beginning dot:</g:Label>
 	<g:TextBox ui:field="suffixTextBox"></g:TextBox>
 	
@@ -87,12 +89,12 @@
 	please refer to <a href="http://docs.oracle.com/javase/tutorial/essential/regex/" target="_blank">Java Tutorial on Regular Expressions</a> 
 	 </my:MoreInfoWidget>
 	
-	<g:Label>Plot Keyword:</g:Label>
-	<g:TextBox ui:field="plot"></g:TextBox>
-	<my:MoreInfoWidget>If the output of your program starts with a line
-	 containing only the followig keyword, the rest of the output is treated
-	  as input data for plotting
-	  </my:MoreInfoWidget>
+<!-- 	<g:Label>Plot Keyword:</g:Label> -->
+<!-- 	<g:TextBox ui:field="plot"></g:TextBox> -->
+<!-- 	<my:MoreInfoWidget>If the output of your program starts with a line -->
+<!-- 	 containing only the followig keyword, the rest of the output is treated -->
+<!-- 	  as input data for plotting -->
+<!-- 	  </my:MoreInfoWidget> -->
 	
 <!-- 	<g:Label>Sample Program:</g:Label> -->
 <!-- 	<g:TextArea ui:field="sampleProgram" width="400px" height="145px"></g:TextArea><br /> -->

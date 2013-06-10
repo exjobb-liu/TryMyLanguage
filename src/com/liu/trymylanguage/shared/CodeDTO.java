@@ -10,9 +10,26 @@ package com.liu.trymylanguage.shared;
  * @version 1.0
  */
 public class CodeDTO implements java.io.Serializable {
-  
+	public CodeDTO(){}
 	
-    /**
+    public CodeDTO(String fileName,
+    		String suffix,
+    		String compileCmd,
+    		String runCmd,
+    		String regex, 
+    		boolean plot,
+    		long timeout) {
+		
+		this.fileName = fileName;
+		this.suffix = suffix;
+		this.runCmd = replaceFnSuf(runCmd);
+		this.plot = plot;
+		this.timeout = timeout;
+		this.compileCmd = replaceFnSuf(compileCmd);
+		this.regex = replaceFnSuf(regex);
+	}
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -30,8 +47,21 @@ public class CodeDTO implements java.io.Serializable {
     /**
      * Describe type here.
      */
-   
-    /**
+    
+    
+    private String regex;
+    
+
+	private String suffix;
+    private String compileCmd;
+    private String runCmd;
+    private long timeout;
+    private boolean	plot;
+    public boolean isPlot() {
+		return plot;
+	}
+
+	/**
      * Get the <code>Code</code> value.
      *
      * @return a <code>String</code> value
@@ -63,7 +93,50 @@ public class CodeDTO implements java.io.Serializable {
      *
      * @param newFileName The new FileName value.
      */
-    public  void setFileName(final String newFileName) {
-	this.fileName = newFileName;
-    }
+   
+    public String getRegex() {
+		return regex;
+	}
+
+	public void setRegex(String regex) {
+		this.regex = replaceFnSuf(regex);
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	
+
+
+	public String getCompileCmd() {
+		return compileCmd;
+	}
+
+	public void setCompileCmd(String compileCmd) {
+		this.compileCmd =replaceFnSuf(compileCmd);
+	}
+
+	public String getRunCmd() {
+		return runCmd;
+	}
+
+	
+
+
+	public long getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+
+	
+
+	public String replaceFnSuf(String in){
+		return in.replaceAll("<filename>", fileName).replaceAll("<suffix>", suffix);
+	}
+	
+	
 }

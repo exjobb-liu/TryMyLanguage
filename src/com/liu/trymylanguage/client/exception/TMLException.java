@@ -18,14 +18,27 @@ public class TMLException extends Exception implements
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
+	
+	private String stackTraceString;
 	public TMLException(String message){
 		
 		super(message);
 		
 	}
+	
+	public TMLException(String messsage, String stackTraceString) {
+		super(messsage);
+		this.stackTraceString = stackTraceString;
+	}
 	public TMLException(){
 		
 		super();
 	}
+	
+	public String getStackTraceString() {
+		return stackTraceString;
+	}
+	
 }
